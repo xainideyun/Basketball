@@ -1,0 +1,242 @@
+<template>
+	<view>
+		<view class="uni-padding-wrap uni-common-mt">
+			<uni-segmented-control :current="current" :values="items" style-type="button" active-color="#007aff" @clickItem="onClickItem" />
+		</view>
+		<view class="content">
+			<view v-show="current === 0" class="list">
+				<view v-if="myList.length > 0">
+					<view class="list-item" v-for="(item, index) in myList" :key='index' @tap="toDetail(item)">
+						<view class="field-item">
+							<text class="jdcat jdcat-basketball"></text>
+							<view class="title field-content">
+								<text class="name">{{item.title}}</text>
+								<text class="creator">{{item.name}}</text>
+							</view>
+						</view>
+						<view class="field-item">
+							<text class="jdcat jdcat-time"></text>
+							<text class="field-content">{{activityTime(item.activityTime)}}</text>
+							<text class="jdcat jdcat-right"></text>
+						</view>
+						<view class="field-item">
+							<text class="jdcat jdcat-address"></text>
+							<text class="field-content">{{item.location}}</text>
+						</view>
+						<view class="badge" :class="{'bg-red': item.status === 2, 'bg-green': item.status === 1, 'bg-gray': item.status === 4}">
+							<text>{{filerStatus(item.status)}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="empty" v-else>
+					<text>没有发布过任何报名活动。</text>
+				</view>
+				<view class="empty" v-if="myList.length > 0 && hasMylist">
+					<text>没有更多了。</text>
+				</view>
+			</view>
+			<view v-show="current === 1">
+
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import uniSegmentedControl from '@/components/uni-segmented-control/uni-segmented-control.vue'
+	import {
+		dateUtils
+	} from "@/utils/util.js"
+	import {
+		activityStatus
+	} from "@/utils/enum.js"
+	import {
+		http
+	} from '@/utils/luch-request/index.js'
+	export default {
+		components: {
+			uniSegmentedControl
+		},
+		data() {
+			return {
+				current: 0,
+				items: ['我发布的', '我参与的'],
+				myList: [],
+				myListPaging: {
+					pageSize: 10,
+					pageIndex: 1
+				},
+				hasMylist: true,
+				joinList: [1]
+			}
+		},
+		onLoad(e) {
+			this.loadMyActivity()
+		},
+		methods: {
+			onClickItem(index) {
+				if (this.current !== index) {
+					this.current = index
+				}
+			},
+			toDetail(item) {
+				uni.navigateTo({
+					url: '/pages/yueqiu/activity/activity?id=' + item.id
+				})
+			},
+			loadMyActivity() {
+				let user = uni.getStorageSync('userinfo');
+				let self = this;
+				http.get(
+						`/activity/create/${user.id}?pageIndex=${this.myListPaging.pageIndex}&pageSize=${this.myListPaging.pageSize}`)
+					.then(function(res) {
+						if (res.data.code > 0) {
+							uni.showToast({
+								title: err.data.message,
+								icon: 'none'
+							})
+							return
+						}
+						if (!res.data.result) {
+							self.hasMylist = false;
+							return;
+						}
+						if (res.data.result < self.myListPaging.pageSize) {
+							self.hasMylist = false;
+						}
+						let now = Date.now();
+						res.data.result.forEach(function(obj) {
+							// 活动状态重新赋值
+							if (obj.status != 4) {
+								obj.status = now >= new Date(obj.activityTime.replace(/-/g, '/')) ? 2 : 1;
+							}
+							self.myList.push(obj)
+						});
+					})
+					.catch(function(err) {
+						uni.showToast({
+							title: err.data.message,
+							icon: 'none'
+						})
+					})
+
+			},
+			activityTime: function(time) {
+				if (!time) return '';
+				let date = time.slice(0, 16);
+				return date + ' ' + dateUtils.getWeek(time)
+			},
+			filerStatus(status) {
+				return activityStatus[status]
+			}
+
+		}
+	}
+</script>
+
+<style lang="scss">
+	page {
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		background-color: #efeff4;
+	}
+
+	view {
+		font-size: 28upx;
+		line-height: inherit
+	}
+
+	.uni-common-mt {
+		margin-top: 20upx;
+	}
+
+	.content {
+		display: flex;
+		align-items: stretch;
+	}
+
+	.list {
+		display: flex;
+		flex-flow: column;
+		margin-top: 20upx;
+		flex-grow: 1;
+
+		.list-item {
+			position: relative;
+			border-top: 1px solid #eee;
+			padding: 20upx;
+			background-color: #fff;
+
+			.title {
+				display: flex;
+				flex-flow: column;
+
+				.name {
+					font-size: 1.4em;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					max-width: 450upx;
+				}
+
+				.creator {
+					color: #777;
+				}
+			}
+
+			.badge {
+				position: absolute;
+				right: 20upx;
+				top: 40upx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				border-radius: 60upx;
+				width: 5em;
+				height: 2.5em;
+			}
+		}
+
+		.list-item:first-child {
+			border-top: none;
+		}
+	}
+
+	.empty {
+		text-align: center;
+		flex-grow: 1;
+		margin: 50upx 0;
+		color: #777;
+	}
+
+	// .field-item {
+	// 	padding: 10upx 0;
+	// 	display: flex;
+	// 	flex-flow: row nowrap;
+	// 	justify-content: center;
+	// 	flex-grow: 1;
+
+	// 	.field-content {
+	// 		flex-grow: 1;
+	// 	}
+
+	// 	.jdcat {
+	// 		margin-right: 20upx;
+	// 		color: #777;
+	// 	}
+
+	// }
+
+	.jdcat-basketball {
+		font-size: 3.3em;
+		width:auto !important;
+	}
+
+	.bg-green,
+	.bg-red {
+		color: #fff;
+	}
+
+	.bg-gray {}
+</style>

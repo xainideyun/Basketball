@@ -1,0 +1,79 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/tabBar/self",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/tabBar/home",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"disableScroll": false
+			}
+		},
+		{
+			"path": "pages/yueqiu/baoming/baoming",
+			"style": {
+				"navigationBarTitleText": "约球报名"
+			}
+		},
+		{
+			"path": "pages/yueqiu/activity/activity",
+			"style": {
+				"navigationBarTitleText": "报名详情",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/yueqiu/activity/join",
+			"style": {
+				"navigationBarTitleText": "用户报名"
+			}
+		},
+		{
+			"path": "pages/my/enroll",
+			"style": {
+				"navigationBarTitleText": "报名活动"
+			}
+		},
+		{
+			"path": "pages/my/editself",
+			"style": {
+				"navigationBarTitleText": "我的名片"
+			}
+		},
+		{
+			"path": "pages/yueqiu/activity/joinPeople",
+			"style": {
+				"navigationBarTitleText": "参与者"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "篮球比赛助手",
+		"navigationBarBackgroundColor": "#007aff",
+		"backgroundColor": "#ffffff"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"borderStyle": "black",
+		"backgroundColor": "#F8F8F8",
+		"list": [{
+				"pagePath": "pages/tabBar/home",
+				"iconPath": "static/basketball.png",
+				"selectedIconPath": "static/basketballHL.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/tabBar/self",
+				"iconPath": "static/self.png",
+				"selectedIconPath": "static/selfHL.png",
+				"text": "我的"
+			}
+		]
+	}
+}
