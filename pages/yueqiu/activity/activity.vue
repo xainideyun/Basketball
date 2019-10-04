@@ -56,8 +56,8 @@
 		</view>
 		<view class="activity-operate">
 			<text class="desc">更多选项（仅创建可见）</text>
-			<button type="default">编辑</button>
-			<button type="warn">删除</button>
+			<button type="default" @tap="onEdit">编辑</button>
+			<button type="warn" v-if="activity.quantity === 0" @tap="onDelete">删除</button>
 		</view>
 
 
@@ -66,7 +66,7 @@
 				<view style="padding: 10upx;text-align: center;">
 					<image :src="qrcodeUrl" mode="aspectFit" style="width: 100%;"></image>
 				</view>
-				<text style="color:#777, margin:10upx 0;">用户可扫码加入</text>
+				<text style="color:#aaa; margin:10upx 0;">扫码加入</text>
 			</view>
 		</neil-modal>
 
@@ -99,6 +99,7 @@
 		},
 		onLoad(e) {
 			this.id = e.id || 1;
+			console.log(e);
 		},
 		onShow() {
 			this._loadActivity()
@@ -154,32 +155,13 @@
 					url: '/pages/yueqiu/activity/join?id=' + this.id
 				})
 			},
-			// onShare() {
-			// 	uni.share({
-			// 	    provider: "weixin",
-			// 	    scene: "WXSceneSession",
-			// 	    type: 5,
-			// 			title: '篮球比赛',
-			// 	    summary: `${this.activity.title}报名`,
-			// 			imageUrl: 'http://e.whliupangzi.cn/images/logo1.png',
-			// 			miniProgram: {
-			// 				id: ''
-			// 			},
-			// 	    success: function (res) {
-			// 	        console.log("success:" + JSON.stringify(res));
-			// 	    },
-			// 	    fail: function (err) {
-			// 	        console.log("fail:" + JSON.stringify(err));
-			// 	    }
-			// 	});
-			// },
 			onQrcode: async function(e) {
 				if (!this.qrcodeUrl) {
 					var {
 						data
 					} = await http.get(`/util/qrcode?scene=${this.activity.id}&page=pages/yueqiu/activity/activity`)
 					this.qrcodeUrl = data.result
-				}
+				} 
 				this.showQrcode = true
 			},
 			onCloseQrcode: function() {
@@ -190,6 +172,27 @@
 				uni.navigateTo({
 					url: 'joinPeople'
 				})
+			},
+			onEdit: function(){
+				uni.setStorageSync("page-activity", this.activity)
+				uni.navigateTo({
+					url: '/pages/yueqiu/activity/editactivity'
+				})
+			},
+			onDelete: function(){
+				
+				var self = this;
+				uni.showModal({
+					content: '确定删除活动吗？',
+					success: async function (res) {
+						if (!res.confirm) return
+						await http.delete("/activity/" + self.activity.id);
+						uni.showToast({
+							title: '删除成功'
+						});
+						uni.$emit('delete-activity', this.activity)
+					}
+				});
 			},
 			joinStatus: function(status) {
 				return joinStatus[status];

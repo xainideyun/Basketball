@@ -9,7 +9,7 @@
 					</view>
 					<view class="input-content">
 						<view>
-							<input class="weui-input" v-model="title" maxlength="20" auto-focus placeholder="输入标题..." />
+							<input class="weui-input" v-model="activity.title" maxlength="20" auto-focus placeholder="输入标题..." />
 						</view>
 					</view>
 				</view>
@@ -45,10 +45,9 @@
 					<view class="input-content">
 						<view class="input-address">
 							<view class="address-info" @tap="toggleAddress()">
-								<text class="first" :style="{color: addressColor}">{{activityAddress}}</text>
-								<text class="second">{{activityAddressDetail}}</text>
+								<text class="first">{{activity.location}}</text>
+								<text class="second">{{activity.address}}</text>
 							</view>
-							<!-- <text class="jdcat jdcat-bottom" @tap="addressHistory()"></text> -->
 							<text class="jdcat jdcat-right"></text>
 						</view>
 					</view>
@@ -60,12 +59,12 @@
 					</view>
 					<view class="input-content">
 						<view>
-							<textarea v-model="remark" auto-height />
+							<textarea v-model="activity.remark" auto-height />
 							</view>
 					</view>
 				</view>
 				<view class="uni-btn-v">
-					<button formType="submit" type="primary" :loading="loading" style="margin: 0 50upx; background-color: #007aff;">确定约球</button>
+					<button formType="submit" type="primary" style="margin: 0 50upx; background-color: #007aff;">确定修改</button>
 				</view>
 			</form>
 		</view>
@@ -81,35 +80,28 @@
 <script>
 	import wPicker from '@/components/w-picker/w-picker.vue'
 	import  { http } from '@/utils/luch-request/index.js'
-	const requestUrl = 'https://unidemo.dcloud.net.cn/ajax/echo/text?name=uni-app'
-	const duration = 2000
 	export default {
 		components: {
 			wPicker
 		},
 		data() {
+			let activity = uni.getStorageSync('page-activity')
 			let now = new Date(),
 				year = now.getFullYear(),
 				month = now.getMonth() + 1,
 				day = now.getDate(),
 				hour = now.getHours(),
 				minus = now.getMinutes();
-
+				
 			return {
-				loading: false,
+				activity,
+				activityDate: activity.activityTime.slice(0, 10),
+				activityTime: activity.activityTime.slice(11, 16),
+				
 				startYear: year - 1,
 				endYear: year + 1,
 				defaultDate: [1, month - 1, day - 1],
-				activityDate: year + '-' + (month > 9 ? '' : '0') + month + '-' + (day > 9 ? '' : '0') + day,
 				defaultTime: [20, 0, 0],
-				activityTime: '20:00',
-				activityAddress: '请选择',
-				addressColor: '#aaa',
-				activityAddressDetail: '',
-				lat: 0,
-				lng: 0,
-				remark: '',
-				title: ''
 			}
 		},
 		methods: {
@@ -130,11 +122,10 @@
 				uni.chooseLocation({
 					success: function(res) {
 						let obj = {name: res.name, address: res.address, lat: res.latitude, lng: res.longitude};
-						self.activityAddress = obj.name;
-						self.activityAddressDetail = obj.address;
-						self.lat = obj.lat;
-						self.lng = obj.lng;
-						self.addressColor = '#000';
+						self.activity.location = obj.name;
+						self.activity.address = obj.address;
+						self.activity.lat = obj.lat;
+						self.activity.lng = obj.lng;
 					},
 					fail(err) {
 						if(err.errMsg === 'chooseLocation:fail authorize no response') {
@@ -155,22 +146,18 @@
 					}
 				});
 			},
-			addressHistory() {
-				// todo 历史地址
-
-			},
 			formSubmit: function(e) {
 				const self = this;
-				if (!this.title) {
+				if (!this.activity.title) {
 					uni.showToast({title: '请输入标题', icon: 'none'});
 					return;
 				}
-				if (!this.activityAddressDetail) {
+				if (!this.activity.address) {
 					uni.showToast({title: '请选择地点', icon: 'none'});
 					return;
 				}
 				uni.showModal({
-					content: "确定发起报名吗？",
+					content: "确定修改吗？",
 					confirmText: "确定",
 					cancelText: "取消",
 					success(res) {
@@ -181,14 +168,11 @@
 			},
 			async _request(){
 				let self = this;
-				this.loading = true;
 				uni.showLoading({
-					title: '正在创建', mask: true
+					title: '请稍等', mask: true
 				})
-				let user = uni.getStorageSync('userinfo');
-				let body = { title: this.title, name: user.nickName, activityTime: `${this.activityDate} ${this.activityTime}:00`, location: this.activityAddress, address: this.activityAddressDetail, lng: this.lng, lat: this.lat, remark: this.remark, userInfoId: user.id }
-				
-				http.post('/activity', body)
+				this.activity.activityTime = this.activityDate + ' ' + this.activityTime
+				http.put('/activity/' + this.activity.id, this.activity)
 					.then(function(res) {
 						uni.hideLoading()
 						if (res.data.code > 0) {
@@ -197,18 +181,18 @@
 							})
 							return;
 						}
-						uni.showToast({title: '创建成功'});
+						uni.showToast({title: '修改成功'});
+						uni.$emit('modify-activity', self.activity)
 						setTimeout(function(){
-							uni.redirectTo({
-								url: '/pages/yueqiu/activity/activity?id=' + res.data.result.id
-							});
+							uni.navigateBack({
+								delta: 1
+							})
 						}, 2000);
 					})
 					.catch(function(err) {
 						uni.showModal({
-							title: '错误', content: err.data.msg
+							title: '错误', content: err.data.message
 						})
-						self.loading = false;
 						uni.hideLoading()
 					})
 			}
@@ -218,7 +202,6 @@
 </script>
 
 <style lang="scss">
-	
 	
 	.input-address {
 		display: flex;

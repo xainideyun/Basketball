@@ -23,6 +23,15 @@
 							<text class="jdcat jdcat-address"></text>
 							<text class="field-content">{{item.location}}</text>
 						</view>
+						<view style="text-align: center; margin-top: 20upx;">
+							共<text class="text-green">{{item.quantity}}</text>人报名，
+							参加<text class="text-green">{{item.joinQuantity}}</text>人，
+							待定<text class="text-red">{{item.absentQuantity}}</text>人，
+							缺席<text class="text-red">{{item.pendingQuantity}}</text>人
+						</view>
+						<view style="text-align: center; color: #aaa; margin-top: 20upx;">
+							<text>创建时间：{{item.createTime}}</text>
+						</view>
 						<view class="badge" :class="{'bg-red': item.status === 2, 'bg-green': item.status === 1, 'bg-gray': item.status === 4}">
 							<text>{{filerStatus(item.status)}}</text>
 						</view>
@@ -31,12 +40,49 @@
 				<view class="empty" v-else>
 					<text>没有发布过任何报名活动。</text>
 				</view>
-				<view class="empty" v-if="myList.length > 0 && hasMylist">
+				<view class="empty" v-if="myList.length > 0 && !hasMylist">
 					<text>没有更多了。</text>
 				</view>
 			</view>
-			<view v-show="current === 1">
-
+			<view v-show="current === 1" class="list">
+				<view v-if="joinList.length > 0">
+					<view class="list-item" v-for="(item, index) in joinList" :key='index' @tap="toDetail(item)">
+						<view class="field-item">
+							<text class="jdcat jdcat-basketball"></text>
+							<view class="title field-content">
+								<text class="name">{{item.title}}</text>
+								<text class="creator">{{item.name}}</text>
+							</view>
+						</view>
+						<view class="field-item">
+							<text class="jdcat jdcat-time"></text>
+							<text class="field-content">{{activityTime(item.activityTime)}}</text>
+							<text class="jdcat jdcat-right"></text>
+						</view>
+						<view class="field-item">
+							<text class="jdcat jdcat-address"></text>
+							<text class="field-content">{{item.location}}</text>
+						</view>
+						<view style="text-align: center; margin-top: 20upx;">
+							共<text class="text-green">{{item.quantity}}</text>人报名，
+							参加<text class="text-green">{{item.joinQuantity}}</text>人，
+							待定<text class="text-red">{{item.absentQuantity}}</text>人，
+							缺席<text class="text-red">{{item.pendingQuantity}}</text>人
+						</view>
+						<view style="text-align: center; color: #aaa; margin-top: 20upx;">
+							<text>创建时间：{{item.createTime}}</text>
+						</view>
+						<view class="badge" :class="{'bg-red': item.status === 2, 'bg-green': item.status === 1, 'bg-gray': item.status === 4}">
+							<text>{{filerStatus(item.status)}}</text>
+						</view>
+					</view>
+				</view>
+				<view class="empty" v-else>
+					<text>没有报名过任何活动。</text>
+				</view>
+				<view class="empty" v-if="joinList.length > 0 && !hasJoinList">
+					<text>没有更多了。</text>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -67,17 +113,61 @@
 					pageIndex: 1
 				},
 				hasMylist: true,
-				joinList: [1]
+				joinList: [],
+				hasJoinList: false,
+				joinListPaging: {
+					pageSize: 10,
+					pageIndex: 1
+				},
+				joinListloaded: false
 			}
 		},
 		onLoad(e) {
+			let self = this
 			this.loadMyActivity()
+			// 监听活动删除
+			uni.$on('delete-activity', function(data) {
+				let num = 0;
+				self.myList.find(function(obj, index) {
+					if (obj.id === data.id) {
+						num = index;
+					}
+				})
+				self.myList.splice(num, 1)
+			})
+			uni.$on('modify-activity', function(data) {
+				let num = 0;
+				self.myList.find(function(obj, index) {
+					if (obj.id === data.id) {
+						num = index;
+					}
+				})
+				self.myList.splice(num, 1, data)
+			})
+		},
+		onUnload() {
+			// 删除监听
+			uni.$off('delete-activity')
+		},
+		onReachBottom: function() {
+			if (this.current === 0 && !this.hasMylist) {
+				if (!this.hasMylist) return
+				this.myListPaging.pageIndex++
+				this.loadMyActivity()
+			} else {
+				if (!this.hasJoinList) return
+				this.joinListPaging.pageIndex++
+				this.loadJoinList()
+			}
 		},
 		methods: {
 			onClickItem(index) {
 				if (this.current !== index) {
 					this.current = index
 				}
+				if (this.joinListloaded) return
+				this.loadJoinList()
+				this.joinListloaded = true
 			},
 			toDetail(item) {
 				uni.navigateTo({
@@ -101,7 +191,7 @@
 							self.hasMylist = false;
 							return;
 						}
-						if (res.data.result < self.myListPaging.pageSize) {
+						if (res.data.result.length < self.myListPaging.pageSize) {
 							self.hasMylist = false;
 						}
 						let now = Date.now();
@@ -120,6 +210,37 @@
 						})
 					})
 
+			},
+			loadJoinList() {
+				let user = this.$store.state.userinfo
+				let self = this
+				http.get(
+						`/activity/join/${user.id}?pageIndex=${this.joinListPaging.pageIndex}&pageSize=${this.joinListPaging.pageSize}`)
+					.then(function(res) {
+						if (!res.data.result) {
+							self.hasJoinList = false;
+							return;
+						}
+						if (res.data.result.length < self.joinListPaging.pageSize) {
+							self.hasJoinList = false;
+						}
+						let now = Date.now();
+						res.data.result.forEach(function(obj) {
+							// 活动状态重新赋值
+							if (obj.status != 4) {
+								obj.status = now >= new Date(obj.activityTime.replace(/-/g, '/')) ? 2 : 1;
+							}
+							self.joinList.push(obj)
+						});
+					})
+					.catch(function(err) {
+						uni.showToast({
+							title: err.data.message,
+							icon: 'none'
+						})
+					})
+
+				
 			},
 			activityTime: function(time) {
 				if (!time) return '';
@@ -230,7 +351,8 @@
 
 	.jdcat-basketball {
 		font-size: 3.3em;
-		width:auto !important;
+		width: auto !important;
+		margin-right: 20upx;
 	}
 
 	.bg-green,

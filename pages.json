@@ -49,6 +49,12 @@
 			"style": {
 				"navigationBarTitleText": "参与者"
 			}
+		},
+		{
+			"path": "pages/yueqiu/activity/editactivity",
+			"style": {
+				"navigationBarTitleText": "修改报名活动"
+			}
 		}
 	],
 	"globalStyle": {
