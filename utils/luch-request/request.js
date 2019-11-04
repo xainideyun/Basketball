@@ -107,6 +107,9 @@ export default class Request {
           resolve(response)
         } else {
           response = this.requestComFail(response)
+					uni.showToast({
+						title: '网络请求错误', icon: 'none'
+					})
           reject(response)
         }
       }

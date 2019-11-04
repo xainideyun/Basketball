@@ -1,4 +1,5 @@
 import Request from './request'
+import { apiUrl } from '../../config'
 
 const test = new Request()
 
@@ -33,7 +34,8 @@ test.interceptor.response((response) => { /* 请求之后拦截器 */
 const http = new Request()
 
 http.setConfig((config) => { /* 设置全局配置 */
-  config.baseUrl = 'https://t.b.api.jiandanmao.cn/api' /* 根域名不同 */
+  // config.baseUrl = 'https://t.b.api.jiandanmao.cn/api' /* 根域名不同 */
+  config.baseUrl = apiUrl
   config.header = {
 		
   }

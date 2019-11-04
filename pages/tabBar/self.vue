@@ -122,8 +122,9 @@
 
 <style lang="scss">
 	page {
-		background-color: #f1f1f1;
+		background-color: #f7f7f7;
 		font-size: 30upx;
+		position: fixed;
 	}
 
 	.header {

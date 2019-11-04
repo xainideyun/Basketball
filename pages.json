@@ -1,16 +1,22 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/tabBar/self",
+			"path": "pages/home/match/single",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "比赛统计"
 			}
 		},
 		{
 			"path": "pages/tabBar/home",
 			"style": {
-				"navigationBarTitleText": "首页",
-				"disableScroll": false
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/tabBar/self",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"backgroundColorTop": "#007aff"
 			}
 		},
 		{
@@ -55,13 +61,52 @@
 			"style": {
 				"navigationBarTitleText": "修改报名活动"
 			}
+		},
+		{
+			"path": "pages/home/match/createSingle",
+			"style": {
+				"navigationBarTitleText": "统计本队"
+			}
+		},
+		{
+			"path": "pages/home/match/join",
+			"style": {
+				"navigationBarTitleText": "加入比赛"
+			}
+		},
+		{
+			"path": "pages/home/match/matchList",
+			"style": {
+				"navigationBarTitleText": "我的比赛"
+			}
+		},
+		{
+			"path": "pages/home/match/joinQrcode",
+			"style": {
+				"navigationBarTitleText": "加入比赛二维码"
+			}
+		},
+		{
+			"path": "pages/home/match/detail",
+			"style": {
+				"navigationBarTitleText": "比赛详情"
+			}
+		},
+		{
+			"path": "pages/home/match/replacePlayer",
+			"style": {
+				"navigationBarTitleText": "替换球员",
+				"backgroundColorTop": "#007aff"
+			}
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "篮球比赛助手",
 		"navigationBarBackgroundColor": "#007aff",
-		"backgroundColor": "#ffffff"
+		"backgroundColorBottom": "#f7f7f7",
+		"backgroundColorTop": "#f7f7f7",
+		"backgroundColor": "#f7f7f7"
 	},
 	"tabBar": {
 		"color": "#7A7E83",

@@ -1,98 +1,117 @@
-/* static/fonts/ */
+
 @font-face {
-	font-family: 'jdcat';
-	/* project id 1425352 */
-	src: url('https://at.alicdn.com/t/font_1425352_lrhue60py0e.eot');
-	src: url('https://at.alicdn.com/t/font_1425352_lrhue60py0e.eot?#iefix') format('embedded-opentype'),
-		url('https://at.alicdn.com/t/font_1425352_lrhue60py0e.woff2') format('woff2'),
-		url('https://at.alicdn.com/t/font_1425352_lrhue60py0e.woff') format('woff'),
-		url('https://at.alicdn.com/t/font_1425352_lrhue60py0e.ttf') format('truetype'),
-		url('https://at.alicdn.com/t/font_1425352_lrhue60py0e.svg#jdcat') format('svg');
+  font-family: 'jdcat';  /* project id 1425352 */
+  src: url('https://at.alicdn.com/t/font_1425352_7mthy1j3l0l.eot');
+  src: url('https://at.alicdn.com/t/font_1425352_7mthy1j3l0l.eot?#iefix') format('embedded-opentype'),
+  url('https://at.alicdn.com/t/font_1425352_7mthy1j3l0l.woff2') format('woff2'),
+  url('https://at.alicdn.com/t/font_1425352_7mthy1j3l0l.woff') format('woff'),
+  url('https://at.alicdn.com/t/font_1425352_7mthy1j3l0l.ttf') format('truetype'),
+  url('https://at.alicdn.com/t/font_1425352_7mthy1j3l0l.svg#jdcat') format('svg');
 }
 
 
 .jdcat {
-	font-family: "jdcat" !important;
-	font-size: 16px;
-	font-style: normal;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+  font-family: "jdcat" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.jdcat-plus:before {
+  content: "\e608";
 }
 
 .jdcat-tongji:before {
-	content: "\e61f";
+  content: "\e61f";
 }
 
 .jdcat-fenlei:before {
-	content: "\e617";
+  content: "\e617";
 }
 
 .jdcat-feedback:before {
-	content: "\e6f4";
+  content: "\e6f4";
 }
 
 .jdcat-right:before {
-	content: "\e601";
+  content: "\e601";
 }
 
 .jdcat-weidenglu:before {
-	content: "\e65b";
+  content: "\e65b";
 }
 
 .jdcat-person:before {
-	content: "\e600";
+  content: "\e600";
 }
 
 .jdcat-time:before {
-	content: "\e603";
+  content: "\e603";
 }
 
 .jdcat-date:before {
-	content: "\e604";
+  content: "\e604";
+}
+
+.jdcat-host:before {
+  content: "\e789";
+}
+
+.jdcat-visitor:before {
+  content: "\e78a";
+}
+
+.jdcat-replace:before {
+  content: "\e63d";
 }
 
 .jdcat-basketball:before {
-	content: "\ea30";
+  content: "\ea30";
 }
 
 .jdcat-yueqiu:before {
-	content: "\e635";
+  content: "\e635";
 }
 
 .jdcat-name:before {
-	content: "\e609";
+  content: "\e609";
 }
 
 .jdcat-address:before {
-	content: "\e605";
+  content: "\e605";
 }
 
 .jdcat-person1:before {
-	content: "\e606";
+  content: "\e606";
 }
 
 .jdcat-bottom:before {
-	content: "\e607";
+  content: "\e607";
 }
 
 .jdcat-biaoti:before {
-	content: "\e627";
+  content: "\e627";
 }
 
 .jdcat-phone:before {
-	content: "\e644";
+  content: "\e644";
 }
 
 .jdcat-duoren:before {
-	content: "\e602";
+  content: "\e602";
 }
 
 .jdcat-number:before {
-	content: "\e690";
+  content: "\e690";
 }
 
 .jdcat-tip:before {
-	content: "\e672";
+  content: "\e672";
+}
+
+.jdcat-back:before {
+  content: "\e68e";
 }
 
 
@@ -1904,6 +1923,10 @@ button[type=primary]:focus {
 
 .text-green {
 	color: #09BB07;
+}
+
+.text-white {
+	color: #fff;
 }
 
 .text-red {

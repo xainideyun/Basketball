@@ -89,10 +89,24 @@ var dateUtils = {
 	}
 }
 
+const jdcat = {
+	showError: function(content) {
+		uni.showToast({
+			title: content, icon: 'none'
+		})
+	}
+}
+
+const awaitWrap = function(promise) {
+	return promise.then(data => [null, data])
+								.catch(err => [err, null])
+}
+
 
 
 module.exports = {
 	formatTime: formatTime,
 	formatLocation: formatLocation,
-	dateUtils: dateUtils
+	dateUtils: dateUtils,
+	jdcat, awaitWrap
 }

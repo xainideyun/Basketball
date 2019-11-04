@@ -66,6 +66,7 @@
 				<button formType="submit" type="primary" :loading="loading" style="margin: 0 50upx; background-color: #007aff;">确定</button>
 			</view>
 		</form>
+		<user-login :show="show" @close="onClose"></user-login>
 	</view>
 </template>
 
@@ -73,23 +74,24 @@
 	import {
 		http
 	} from "@/utils/luch-request/index.js"
+	import userLogin from "@/components/basketball/user-login.vue"
 	export default {
 		data() {
-			// let user = uni.getStorageSync("userinfo");
-			// let name = uni.getStorageSync('historyName') || user.nickName;
-			// let phone = uni.getStorageSync('historyPhone') || user.phone;
-			// let number = uni.getStorageSync('historyNumber') || '';
 			let userinfo = this.$store.state.userinfo
+			let name = uni.getStorageSync('historyName') || userinfo.name || userinfo.nickName;
+			let phone = uni.getStorageSync('historyPhone') || userinfo.phone;
+			let number = uni.getStorageSync('historyNumber') || userinfo.playNumber;
 			return {
 				entity: {
-					name: userinfo.name,
-					playNumber: userinfo.playNumber,
+					name: name,
+					playNumber: number,
 					userInfoId: userinfo.id,
 					gender: userinfo.gender,
-					phone: userinfo.phone,
+					phone: phone,
 					faceUrl: userinfo.faceUrl,
 					activityEnrollId: 0,
-					status: 1
+					status: 1,
+					show: false
 				},
 				loading: false
 			}
@@ -100,6 +102,9 @@
 		methods: {
 			statusChange: function(e) {
 				this.entity.status = +e.detail.value
+			},
+			onClose: function() {
+				this.show = false
 			},
 			formSubmit: function(e) {
 				if (!this.entity.name) {
@@ -118,11 +123,8 @@
 						self._submit()
 					}
 				})
-				console.log(this.$data);
-				return
-				this._submit();
 			},
-			_submit() {
+			_submit: function() {
 				let self = this
 				this.loading = true
 				uni.showLoading({
@@ -138,10 +140,8 @@
 							title: '报名成功'
 						})
 						setTimeout(function() {
-							uni.navigateBack({
-								delta: 1
-							})
-						}, 3000);
+							uni.navigateBack()
+						}, 1500);
 					})
 					.catch(function(err) {
 						uni.showToast({

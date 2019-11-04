@@ -1,22 +1,31 @@
 <template name="basketball">
 	<view class="page">
-		<!-- <image src="../../static/basketball.jpg" mode="widthFix" class="response"></image> -->
-		<view class="nav-list">
-			<view :url="item.url" class="nav-li" :class="'bg-'+item.color" @tap="navigateTo(item)"
-			 v-for="(item,index) in elements" :key="index">
-				<view class="nav-title">{{item.title}}</view>
-				<view class="nav-name">{{item.name}}</view>
-				<text :class="'jdcat jdcat-' + item.cuIcon"></text>
+		<scroll-view style="height: 100%;" scroll-y="true">
+			<view class="nav-list">
+				<view :url="item.url" class="nav-li" :class="'bg-'+item.color" @tap="navigateTo(item)" v-for="(item,index) in elements"
+				 :key="index">
+					<view class="nav-title">{{item.title}}</view>
+					<view class="nav-name">{{item.name}}</view>
+					<text :class="'jdcat jdcat-' + item.cuIcon"></text>
+				</view>
 			</view>
-		</view>
+		</scroll-view>
+
+		<user-login :show="show" @close="onClose"></user-login>
+
 	</view>
 </template>
 
 <script>
+	import userLogin from "@/components/basketball/user-login.vue"
 	export default {
 		name: "basketball",
+		components: {
+			userLogin
+		},
 		data() {
 			return {
+				show: false,
 				elements: [{
 						title: '约球报名',
 						name: 'start',
@@ -27,56 +36,49 @@
 					{
 						title: '统计本队',
 						name: 'statistics',
-						url: '/pages/yueqiu/activity/activity',
+						url: '/pages/home/match/createSingle',
 						color: 'cyan',
 						cuIcon: 'tongji'
 					},
 					{
-						title: '统计双方',
+						title: '我的比赛',
 						name: 'double',
-						url: '/pages/yueqiu/activity/join',
+						url: '/pages/home/match/matchList',
 						color: 'orange',
 						cuIcon: 'duoren'
 					}
 				]
 			}
 		},
-		onShow() {
-
-		},
 		methods: {
 			navigateTo(item) {
-				let user = uni.getStorageSync('userinfo');
+				let user = this.$store.state.userinfo
 				if (!user.isRegisted) {
-					uni.showModal({
-						title: '提示',
-						content: '请先登录系统',
-						confirmText: '去登陆',
-						success(res) {
-							if (!res.confirm) return;
-							uni.switchTab({
-								url: '/pages/tabBar/self'
-							})
-						}
-					})
-					return;
+					this.show = true
+					return
 				}
 				if (!item.url) return;
 				uni.navigateTo({
 					url: item.url
 				})
+			},
+			onClose: function() {
+				this.show = false
 			}
 		}
 	}
 </script>
 
 <style>
+	.page {
+		position: fixed;
+	}
+
 	.nav-list {
 		display: flex;
 		flex-wrap: wrap;
-		padding: 0px 40upx 0px;
+		padding: 50upx 40upx 0upx 40upx;
 		justify-content: space-between;
-		margin-top: 50upx;
 	}
 
 	.nav-li {

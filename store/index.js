@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	state: {
-		userinfo: {}
+		userinfo: {},			// 登录的用户信息
 	},
 	mutations: {
 		login: function(state, userinfo) {

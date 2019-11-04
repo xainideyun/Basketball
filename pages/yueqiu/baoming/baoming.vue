@@ -202,7 +202,7 @@
 							uni.redirectTo({
 								url: '/pages/yueqiu/activity/activity?id=' + res.data.result.id
 							});
-						}, 2000);
+						}, 1500);
 					})
 					.catch(function(err) {
 						uni.showModal({

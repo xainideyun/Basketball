@@ -78,7 +78,7 @@
 					</view>
 				</view>
 				<view class="empty" v-else>
-					<text>没有报名过任何活动。</text>
+					<text>没有参与过任何活动。</text>
 				</view>
 				<view class="empty" v-if="joinList.length > 0 && !hasJoinList">
 					<text>没有更多了。</text>
@@ -110,14 +110,16 @@
 				myList: [],
 				myListPaging: {
 					pageSize: 10,
-					pageIndex: 1
+					pageIndex: 1,
+					maxScore: 100000000
 				},
 				hasMylist: true,
 				joinList: [],
-				hasJoinList: false,
+				hasJoinList: true,
 				joinListPaging: {
 					pageSize: 10,
-					pageIndex: 1
+					pageIndex: 1,
+					maxScore: 100000000
 				},
 				joinListloaded: false
 			}
@@ -150,13 +152,13 @@
 			uni.$off('delete-activity')
 		},
 		onReachBottom: function() {
-			if (this.current === 0 && !this.hasMylist) {
+			if (this.current === 0) {
 				if (!this.hasMylist) return
-				this.myListPaging.pageIndex++
+				this.myListPaging.maxScore = this.myList[this.myList.length - 1].id - 1
 				this.loadMyActivity()
 			} else {
 				if (!this.hasJoinList) return
-				this.joinListPaging.pageIndex++
+				this.joinListPaging.maxScore = this.joinList[this.joinList.length - 1].id - 1
 				this.loadJoinList()
 			}
 		},
@@ -178,7 +180,7 @@
 				let user = uni.getStorageSync('userinfo');
 				let self = this;
 				http.get(
-						`/activity/create/${user.id}?pageIndex=${this.myListPaging.pageIndex}&pageSize=${this.myListPaging.pageSize}`)
+						`/activity/create/${user.id}?pageIndex=${this.myListPaging.pageIndex}&maxScore=${this.myListPaging.maxScore}&pageSize=${this.myListPaging.pageSize}`)
 					.then(function(res) {
 						if (res.data.code > 0) {
 							uni.showToast({
@@ -194,7 +196,7 @@
 						if (res.data.result.length < self.myListPaging.pageSize) {
 							self.hasMylist = false;
 						}
-						let now = Date.now();
+						let now = new Date();
 						res.data.result.forEach(function(obj) {
 							// 活动状态重新赋值
 							if (obj.status != 4) {
@@ -215,7 +217,7 @@
 				let user = this.$store.state.userinfo
 				let self = this
 				http.get(
-						`/activity/join/${user.id}?pageIndex=${this.joinListPaging.pageIndex}&pageSize=${this.joinListPaging.pageSize}`)
+						`/activity/join/${user.id}?pageIndex=${this.joinListPaging.pageIndex}&pageSize=${this.joinListPaging.pageSize}&maxScore=${this.joinListPaging.maxScore}`)
 					.then(function(res) {
 						if (!res.data.result) {
 							self.hasJoinList = false;
@@ -224,7 +226,7 @@
 						if (res.data.result.length < self.joinListPaging.pageSize) {
 							self.hasJoinList = false;
 						}
-						let now = Date.now();
+						let now = new Date();
 						res.data.result.forEach(function(obj) {
 							// 活动状态重新赋值
 							if (obj.status != 4) {

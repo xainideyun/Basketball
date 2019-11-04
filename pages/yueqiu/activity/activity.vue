@@ -54,7 +54,7 @@
 				<button type="warn" style="width:50%" @tap="onQrcode">活动二维码</button>
 			</view>
 		</view>
-		<view class="activity-operate">
+		<view class="activity-operate" v-if="isCreator">
 			<text class="desc">更多选项（仅创建可见）</text>
 			<button type="default" @tap="onEdit">编辑</button>
 			<button type="warn" v-if="activity.quantity === 0" @tap="onDelete">删除</button>
@@ -69,12 +69,17 @@
 				<text style="color:#aaa; margin:10upx 0;">扫码加入</text>
 			</view>
 		</neil-modal>
+		<user-login :show="show" @close="onClose"></user-login>
+<!-- 
+		<uni-fab :pattern="fab.pattern" :content="fab.content" icon="jdcat-back" :horizontal="fab.horizontal" :vertical="fab.vertical"
+		 :direction="fab.direction" @onClick="back"></uni-fab> -->
 
 		<view style="height: 200upx;"></view>
 	</view>
 </template>
 
 <script>
+	import userLogin from "@/components/basketball/user-login.vue"
 	import {
 		http
 	} from '@/utils/luch-request/index.js'
@@ -84,22 +89,37 @@
 	import {
 		dateUtils
 	} from "@/utils/util.js"
-	import neilModal from '@/components/neil-modal/neil-modal.vue';
+	import neilModal from '@/components/neil-modal/neil-modal.vue'
+	import uniFab from '@/components/uni-fab/uni-fab.vue'
 	export default {
 		components: {
-			neilModal
+			neilModal,
+			userLogin,
+			uniFab
 		},
 		data() {
 			return {
 				activity: {},
 				id: 0,
 				showQrcode: false,
-				qrcodeUrl: ''
+				qrcodeUrl: '',
+				show: false,
+				fab: {
+					horizontal: 'right',
+					vertical: 'bottom',
+					direction: 'horizontal',
+					pattern: {
+						color: '#7A7E83',
+						backgroundColor: '#fff',
+						selectedColor: '#007AFF',
+						buttonColor: "#007AFF"
+					}
+				},
+				isCreator: false
 			}
 		},
 		onLoad(e) {
 			this.id = e.id || 1;
-			console.log(e);
 		},
 		onShow() {
 			this._loadActivity()
@@ -109,36 +129,11 @@
 		},
 		methods: {
 			join: function() {
-				let user = uni.getStorageSync('userinfo');
-				if (!this.$store.state.userinfo.isRegisted) {
-					uni.showModal({
-						title: '提示',
-						content: '请先登录系统',
-						confirmText: '去登陆',
-						success(res) {
-							if (!res.confirm) return;
-							uni.switchTab({
-								url: '/pages/tabBar/self'
-							})
-						}
-					})
-					return;
+				let user = this.$store.state.userinfo
+				if (!user.isRegisted) {
+					this.show = true
+					return
 				}
-				// if (!this.$store.state.userinfo.name) {
-				// 	uni.showModal({
-				// 		title: '提示',
-				// 		content: '请先完善个人信息再报名',
-				// 		cancelText: '取消',
-				// 		confirmText: '去完善',
-				// 		success: res => {
-				// 			if(!res.confirm) return;
-				// 			uni.navigateTo({
-				// 				url: '/pages/my/editself'
-				// 			});
-				// 		}
-				// 	});
-				// 	return;
-				// }
 				var participants = []
 				if (this.activity.activityParticipants && this.activity.activityParticipants.length > 0) {
 					participants = this.activity.activityParticipants.filter(obj => obj.userInfoId === user.id)
@@ -155,13 +150,16 @@
 					url: '/pages/yueqiu/activity/join?id=' + this.id
 				})
 			},
+			onClose: function() {
+				this.show = false
+			},
 			onQrcode: async function(e) {
 				if (!this.qrcodeUrl) {
 					var {
 						data
-					} = await http.get(`/util/qrcode?scene=${this.activity.id}&page=pages/yueqiu/activity/activity`)
+					} = await http.post(`/util/qrcode`, {item1: `?id=${this.activity.id}`, item2: 'pages/yueqiu/activity/activity'})
 					this.qrcodeUrl = data.result
-				} 
+				}
 				this.showQrcode = true
 			},
 			onCloseQrcode: function() {
@@ -173,18 +171,17 @@
 					url: 'joinPeople'
 				})
 			},
-			onEdit: function(){
+			onEdit: function() {
 				uni.setStorageSync("page-activity", this.activity)
 				uni.navigateTo({
 					url: '/pages/yueqiu/activity/editactivity'
 				})
 			},
-			onDelete: function(){
-				
+			onDelete: function() {
 				var self = this;
 				uni.showModal({
 					content: '确定删除活动吗？',
-					success: async function (res) {
+					success: async function(res) {
 						if (!res.confirm) return
 						await http.delete("/activity/" + self.activity.id);
 						uni.showToast({
@@ -210,6 +207,11 @@
 					latitude: this.activity.lat
 				})
 			},
+			back: function(e) {
+				uni.switchTab({
+					url: '/pages/tabBar/home'
+				});
+			},
 			_loadActivity() {
 				let self = this;
 				http.get('/activity/' + this.id)
@@ -217,6 +219,7 @@
 						data
 					}) {
 						self.activity = data.result
+						self.isCreator = self.activity.userInfoId === self.$store.state.userinfo.id
 						uni.stopPullDownRefresh()
 					})
 					.catch(err => {
@@ -251,6 +254,7 @@
 			justify-content: center;
 			align-items: center;
 			border-bottom: 1px solid #ddd;
+			padding: 10upx 0;
 
 			.face {
 				border-radius: 50%;
