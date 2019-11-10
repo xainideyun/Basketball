@@ -48,6 +48,28 @@ var dateUtils = {
 		}
 		return humanize || '刚刚';
 	},
+	time: function(fmt, t) {
+		fmt = fmt || "yyyy-MM-dd hh:mm:ss"
+		t = t || new Date()
+		var o = {
+			"M+": t.getMonth() + 1, //月份 
+			"d+": t.getDate(), //日 
+			"h+": t.getHours(), //小时 
+			"m+": t.getMinutes(), //分 
+			"s+": t.getSeconds(), //秒 
+			"q+": Math.floor((t.getMonth() + 3) / 3), //季度 
+			"S": t.getMilliseconds() //毫秒 
+		}
+		if (/(y+)/.test(fmt)) {
+			fmt = fmt.replace(RegExp.$1, (t.getFullYear() + "").substr(4 - RegExp.$1.length))
+		}
+		for (var k in o) {
+			if (new RegExp("(" + k + ")").test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)))
+			}
+		}
+		return fmt
+	},
 	format: function(dateStr) {
 		var date = this.parse(dateStr)
 		var diff = Date.now() - date.getTime();
@@ -64,10 +86,10 @@ var dateUtils = {
 		var a = str.split(/[^0-9]/);
 		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
 	},
-	getWeek: function (time) {
+	getWeek: function(time) {
 		var myDate;
-		if(time instanceof Date) myDate = time;
-		else myDate = new Date(time.replace(/-/g,'/'));
+		if (time instanceof Date) myDate = time;
+		else myDate = new Date(time.replace(/-/g, '/'));
 		var week = myDate.getDay()
 		switch (week) {
 			case 0:
@@ -92,14 +114,15 @@ var dateUtils = {
 const jdcat = {
 	showError: function(content) {
 		uni.showToast({
-			title: content, icon: 'none'
+			title: content,
+			icon: 'none'
 		})
 	}
 }
 
 const awaitWrap = function(promise) {
 	return promise.then(data => [null, data])
-								.catch(err => [err, null])
+		.catch(err => [err, null])
 }
 
 
@@ -108,5 +131,6 @@ module.exports = {
 	formatTime: formatTime,
 	formatLocation: formatLocation,
 	dateUtils: dateUtils,
-	jdcat, awaitWrap
+	jdcat,
+	awaitWrap
 }

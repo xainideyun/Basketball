@@ -1,5 +1,4 @@
 const taketimeFilter = function (time) {
-	console.log(time);
 	if (!time) return ''
 	var second = Math.round(time / 1000, 0)
 	var hour = Math.floor(second / 3600)

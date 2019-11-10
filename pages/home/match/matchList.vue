@@ -100,6 +100,13 @@
 		onLoad: async function(e) {
 			this.userId = this.$store.state.userinfo.id
 			await this._loadCreate()
+			
+			uni.$on("matchStatusChange", function(match) {
+				var item = this.createList.find(a => a.id === match.id)
+				if (item) item.status = match.status
+				item = this.joinList.find(a => a.id === match.id)
+				if (item) item.status = match.status
+			}.bind(this))
 		},
 		onReachBottom: async function() {
 			if (this.current === 0) {

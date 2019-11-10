@@ -9,7 +9,7 @@
 					<text>{{match.hostName || '主队'}}</text>
 				</view>
 				<view class="result">
-					<text>{{match.hostScore || ''}} : {{match.visitorScore || ''}}</text>
+					<text>{{match.hostScore || '0'}} : {{match.visitorScore || '0'}}</text>
 				</view>
 				<view class="visitor">
 					<text>{{match.visitorName || '客队'}}</text>
@@ -245,9 +245,9 @@
 		computed: {
 			matchColor: function() {
 				var status = this.match.status || 0
-				if (status === 1) return 'green'
+				if (status === 1) return '#4cdc4c'
 				else if (status === 2) return 'red'
-				else if (status === 3) return 'yellow'
+				else if (status === 3) return '#ea7042'
 				return 'black'
 			}
 		},
@@ -396,6 +396,10 @@
 						white-space: nowrap;
 						overflow: hidden;
 						text-overflow: ellipsis;
+						border-top: 1upx solid #ccc;
+					}
+					.cell:first-child {
+						border-top: none;
 					}
 				}
 
