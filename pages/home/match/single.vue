@@ -44,7 +44,8 @@
 				</view>
 				<scroll-view :scroll-y="true">
 					<view class="players">
-						<view class="player" :class="{selected: selectedPlayer.id === player.id}" v-for="(player, index) in upPlayers1" :key="index" @tap="onPlayer(player)">
+						<view class="player" :class="{selected: selectedPlayer.id === player.id}" v-for="(player, index) in upPlayers1"
+						 :key="index" @tap="onPlayer(player)">
 							<text class="data">{{player.score}}/{{player.backboard}}/{{player.assists}}/{{player.blockShot}}</text>
 							<view class="info">
 								<text class="name">{{player.name}}</text>
@@ -69,7 +70,8 @@
 				</view>
 				<scroll-view scroll-y="true">
 					<view class="players">
-						<view class="player" :class="{selected: selectedPlayer.id === player.id}" v-for="(player, index) in upPlayers2" :key="index" @tap="onPlayer(player)">
+						<view class="player" :class="{selected: selectedPlayer.id === player.id}" v-for="(player, index) in upPlayers2"
+						 :key="index" @tap="onPlayer(player)">
 							<text class="number">{{player.playNumber}}</text>
 							<view class="info">
 								<text class="name">{{player.name}}</text>
@@ -89,7 +91,8 @@
 		</view>
 
 
-		<neil-modal :show="showWindow" @close="onHideWindow" :title="recordName" :showConfirm="false" :showCancel="false" :show-cancel="false">
+		<neil-modal :show="showWindow" @close="onHideWindow" :title="recordName" :showConfirm="false" :showCancel="false"
+		 :show-cancel="false">
 			<view class="data-list" style="margin-top: 10upx;">
 				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="1" data-property="onePoint">
 					<text>一分命中</text>
@@ -118,21 +121,26 @@
 				</view>
 			</view>
 			<view class="data-list" style="margin-top: 10upx;">
-				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="罚球不中" :data-score="1" data-property="unOnePoint">
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="罚球不中" :data-score="1"
+				 data-property="unOnePoint">
 					<text>一分不中</text>
 				</view>
-				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="投篮不中" :data-score="1" data-property="unTwoPoint">
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="投篮不中" :data-score="1"
+				 data-property="unTwoPoint">
 					<text>两分不中</text>
 				</view>
-				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="三分不中" :data-score="1" data-property="unThreePoint">
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="三分不中" :data-score="1"
+				 data-property="unThreePoint">
 					<text>三分不中</text>
 				</view>
 			</view>
 			<view class="data-list" style="margin-bottom: 10upx;">
-				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="犯规" :data-score="1" data-property="foul">
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="犯规" :data-score="1"
+				 data-property="foul">
 					<text>犯规</text>
 				</view>
-				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="失误" :data-score="1" data-property="fault">
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="失误" :data-score="1"
+				 data-property="fault">
 					<text>失误</text>
 				</view>
 			</view>
@@ -161,13 +169,13 @@
 		},
 		data() {
 			return {
-				match: {},									// 比赛对象
-				section: {},								// 当前进行中的单节
-				teams: [],									// 队伍
-				players: [],								// 所有球员
-				buttons: [],								// 操作菜单
-				showWindow: false,					// 是否显示数据记录窗口
-				selectedPlayer: {}					// 选中的球员
+				match: {}, // 比赛对象
+				section: {}, // 当前进行中的单节
+				teams: [], // 队伍
+				players: [], // 所有球员
+				buttons: [], // 操作菜单
+				showWindow: false, // 是否显示数据记录窗口
+				selectedPlayer: {} // 选中的球员
 			}
 		},
 		onLoad: async function(e) {
@@ -264,7 +272,10 @@
 				var team1 = this.teams[0],
 					team2 = this.teams[1],
 					self = this
-				this.buttons = []
+				this.buttons = [{
+					name: '更换统计员',
+					method: 'onChange'
+				}]
 				if (this.match.status === 0) {
 					this.buttons.push({
 						name: '开始比赛',
@@ -323,6 +334,12 @@
 						var button = self.buttons[e.tapIndex]
 						self[button.method](button.obj)
 					}
+				})
+			},
+			onChange: function() {
+				var team = this.teams[0]
+				uni.navigateTo({
+					url: `change?id=${team.id}&name=${team.name}`
 				})
 			},
 			onStartMatch: async function() { // 开始比赛
@@ -458,45 +475,45 @@
 				this.selectedPlayer = player
 			},
 			onRecord(e) {
-				var prop = e.currentTarget.dataset, 
+				var prop = e.currentTarget.dataset,
 					selectedPlayer = this.selectedPlayer,
-					self = this, 
+					self = this,
 					team = this.teams.find(team => team.id === self.selectedPlayer.teamId),
 					section = this.section,
 					match = this.match
-					
-				selectedPlayer[prop.property] += 1			// 记录球员数据
-				team[prop.property] += 1								// 记录球队数据
-				section[prop.property] += 1							// 记录单节数据
+
+				selectedPlayer[prop.property] += 1 // 记录球员数据
+				team[prop.property] += 1 // 记录球队数据
+				section[prop.property] += 1 // 记录单节数据
 				if (prop.tip === "得分") {
 					let score = +prop.score
-					this.selectedPlayer.score += score		// 记录球员总得分
-					this.players.forEach(player => {			// 记录上场球员正负值
+					this.selectedPlayer.score += score // 记录球员总得分
+					this.players.forEach(player => { // 记录上场球员正负值
 						if (player.status === 0) return
 						if (player.teamId === self.selectedPlayer.teamId) {
 							player.getLost += score
 						} else {
-							player.getLost -=- score
+							player.getLost -= -score
 						}
 						player.isModify = true
 					})
-					team.score += score										// 记录球队得分
-					
-					if (match.hostName === team.name) {		// 记录比赛得分
+					team.score += score // 记录球队得分
+
+					if (match.hostName === team.name) { // 记录比赛得分
 						match.hostScore += score
-						section.hostScore += score								
+						section.hostScore += score
 					} else {
 						match.visitorScore += score
-						section.visitorScore += score								
+						section.visitorScore += score
 					}
 					match.isModify = true
 				}
-				
+
 				selectedPlayer.isModify = true
 				team.isModify = true
 				section.isModify = true
-				
-				this._upload()														// 上传数据
+
+				this._upload() // 上传数据
 				this.onHideWindow()
 			},
 			onHideWindow() {
@@ -875,7 +892,7 @@
 			flex-grow: 1;
 		}
 	}
-	
+
 	.selected {
 		background-color: #e0e0e0;
 	}
@@ -899,6 +916,7 @@
 			background-color: #40adb4;
 			color: #fff;
 		}
+
 		.data-item-hover {
 			background-color: #10696f;
 		}
@@ -906,7 +924,7 @@
 		.bg-warning {
 			background-color: #f6584c;
 		}
-		
+
 		.bg-warning-hover {
 			background-color: #902e27;
 		}

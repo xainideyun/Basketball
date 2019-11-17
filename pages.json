@@ -1,15 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/home/match/single",
-			"style": {
-				"navigationBarTitleText": "比赛统计"
-			}
-		},
-		{
 			"path": "pages/tabBar/home",
 			"style": {
 				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/home/match/single",
+			"style": {
+				"navigationBarTitleText": "比赛统计"
 			}
 		},
 		{
@@ -96,6 +96,27 @@
 			"path": "pages/home/match/replacePlayer",
 			"style": {
 				"navigationBarTitleText": "替换球员",
+				"backgroundColorTop": "#007aff"
+			}
+		},
+		{
+			"path": "pages/home/match/change",
+			"style": {
+				"navigationBarTitleText": "更换统计员",
+				"backgroundColorTop": "#007aff"
+			}
+		},
+		{
+			"path": "pages/home/match/confirmChange",
+			"style": {
+				"navigationBarTitleText": "更换统计员",
+				"backgroundColorTop": "#007aff"
+			}
+		},
+		{
+			"path": "pages/my/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈",
 				"backgroundColorTop": "#007aff"
 			}
 		}

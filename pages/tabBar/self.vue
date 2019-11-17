@@ -38,14 +38,14 @@
 				</view>
 			</view>
 			<view class="list">
-				<view class="li ">
+				<view class="li">
 					<view class="icon">
 						<image src="../../static/about.png"></image>
 					</view>
 					<view class="text">关于我们</view>
 					<text class="jdcat jdcat-right"></text>
 				</view>
-				<view class="li ">
+				<view class="li" @tap="onFeedback">
 					<view class="icon">
 						<image src="../../static/feedback.png"></image>
 					</view>
@@ -115,7 +115,11 @@
 					url: '/pages/my/editself'
 				});
 			},
-			
+			onFeedback: function() {
+				uni.navigateTo({
+					url: '/pages/my/feedback'
+				})
+			}
 		}
 	}
 </script>

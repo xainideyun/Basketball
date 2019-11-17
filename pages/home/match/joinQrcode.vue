@@ -54,7 +54,7 @@
 				data
 			} = await http.post(`/util/qrcode`, {
 				item1: `?id=${e.id}`,
-				item2: 'pages/match/join'
+				item2: 'pages/home/match/join'
 			})
 			this.qrcodeUrl = data.result
 			this._loadPlayers()
@@ -131,7 +131,7 @@
 		width: 100%;
 
 		image {
-			width: 500upx
+			width: 500upx;
 		}
 	}
 

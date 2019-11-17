@@ -137,7 +137,7 @@
 					return
 				}
 				var {data} = await http.get(`/match/teams/${match.id}`)
-				var mana = data.find(a => a.userInfoId === user.id)
+				var mana = data.find(a => a.userInfoId === user.id && a.name !== '客队')
 				if (!mana) {
 					uni.navigateTo({
 						url: '/pages/home/match/detail?id=' + match.id

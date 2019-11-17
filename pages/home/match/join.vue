@@ -37,6 +37,9 @@
 	} from "@/utils/luch-request/index.js"
 	import userLogin from "@/components/basketball/user-login.vue"
 	export default {
+		components: {
+			userLogin
+		},
 		data() {
 			let userinfo = this.$store.state.userinfo
 			let name = uni.getStorageSync('historyName') || userinfo.name || userinfo.nickName || '';

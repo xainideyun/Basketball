@@ -224,7 +224,7 @@
 		onLoad: async function(e) {
 			var id = e.id || 1
 			
-			await http.post("/match/record?hostScore=11&visitorScore=22", {name: '华天晓', logTime: new Date(), content: Date.now() + "詹姆斯连得7分，主宰比赛了。[湖人44:21勇士]", category: 1, matchId: 1, userInfoId: 1})
+			// await http.post("/match/record?hostScore=11&visitorScore=22", {name: '华天晓', logTime: new Date(), content: Date.now() + "詹姆斯连得7分，主宰比赛了。[湖人44:21勇士]", category: 1, matchId: 1, userInfoId: 1})
 			
 			uni.showLoading({
 				title: '正在加载...',
