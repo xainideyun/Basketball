@@ -19,6 +19,7 @@
 </script>
 
 <style lang="scss">
+	@import "uni.scss";
 	@import "app.scss";
 
 	.page {

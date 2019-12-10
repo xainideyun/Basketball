@@ -27,6 +27,9 @@
 					</view>
 				</view>
 			</view>
+			<view class="tip">
+				<text>注：创建比赛后，请先增加球员，然后通过球员轮换，上场首发球员。</text>
+			</view>
 			<view class="uni-btn-v">
 				<button formType="submit" type="primary" :loading="loading" style="margin: 0 50upx; background-color: #007aff;">创建</button>
 			</view>
@@ -166,5 +169,9 @@
 				line-height: 1;
 			}
 		}
+	}
+	.tip {
+		padding: 10upx;
+		color: $uni-color-error;
 	}
 </style>

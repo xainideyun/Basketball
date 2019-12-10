@@ -225,7 +225,8 @@
 
 	.bg-light-zi {
 		color: #fff;
-		background-color: #a7a0fe;
+		/* background-color: #a7a0fe; */
+		background-color: #ccc;
 	}
 
 	.bg-light-red {

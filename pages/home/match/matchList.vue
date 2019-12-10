@@ -5,35 +5,6 @@
 		</view>
 		<view class="content">
 			<view v-show="current === 0" class="list">
-				<view v-if="createList.length > 0">
-					<view class="list-item" v-for="(item, index) in createList" :key='index' @tap="toDetail(item)">
-						<view class="info">
-							<view class="team">
-								<text class="jdcat jdcat-host"></text>
-								<text class="name">{{item.hostName}}</text>
-								<text class="score">{{item.hostScore}}分</text>
-							</view>
-							<view class="team">
-								<text class="jdcat jdcat-visitor"></text>
-								<text class="name">{{item.visitorName}}</text>
-								<text class="score">{{item.visitorScore}}分</text>
-							</view>
-							<text class="tip">比赛时间：{{item.createTime}}</text>
-							<text class="tip">比赛地点：{{item.location}}</text>
-						</view>
-						<view class="navigate">
-							<text class="jdcat jdcat-right"></text>
-						</view>
-					</view>
-				</view>
-				<view class="empty" v-else>
-					<text>没有创建过任何比赛。</text>
-				</view>
-				<view class="empty" v-if="createList.length > 0 && !hasCreateList">
-					<text>没有更多了。</text>
-				</view>
-			</view>
-			<view v-show="current === 1" class="list">
 				<view v-if="joinList.length > 0">
 					<view class="list-item" v-for="(item, index) in joinList" :key='index' @tap="toDetail(item)">
 						<view class="info">
@@ -62,6 +33,35 @@
 					<text>没有更多了。</text>
 				</view>
 			</view>
+			<view v-show="current === 1" class="list">
+				<view v-if="createList.length > 0">
+					<view class="list-item" v-for="(item, index) in createList" :key='index' @tap="toDetail(item)">
+						<view class="info">
+							<view class="team">
+								<text class="jdcat jdcat-host"></text>
+								<text class="name">{{item.hostName}}</text>
+								<text class="score">{{item.hostScore}}分</text>
+							</view>
+							<view class="team">
+								<text class="jdcat jdcat-visitor"></text>
+								<text class="name">{{item.visitorName}}</text>
+								<text class="score">{{item.visitorScore}}分</text>
+							</view>
+							<text class="tip">比赛时间：{{item.createTime}}</text>
+							<text class="tip">比赛地点：{{item.location}}</text>
+						</view>
+						<view class="navigate">
+							<text class="jdcat jdcat-right"></text>
+						</view>
+					</view>
+				</view>
+				<view class="empty" v-else>
+					<text>没有创建过任何比赛。</text>
+				</view>
+				<view class="empty" v-if="createList.length > 0 && !hasCreateList">
+					<text>没有更多了。</text>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -78,7 +78,7 @@
 		data() {
 			return {
 				current: 0,
-				items: ['我创建的', '我参与的'],
+				items: ['我参与的', '我创建的'],
 				userId: 0,
 				createList: [],								// 我创建的比赛列表对象
 				hasCreateList: true,					// 创建的比赛列表是否还有数据没有加载
@@ -94,12 +94,12 @@
 					maxScore: 999999999,
 					pageSize: 10
 				},
-				joinListloaded: false					// 第一次点击到我参与的比赛选项卡时，加载列表
+				createListloaded: false					// 第一次点击到我创建的比赛选项卡时，加载列表
 			}
 		},
 		onLoad: async function(e) {
 			this.userId = this.$store.state.userinfo.id
-			await this._loadCreate()
+			await this._loadJoinList()
 			
 			uni.$on("matchStatusChange", function(match) {
 				var item = this.createList.find(a => a.id === match.id)
@@ -124,9 +124,9 @@
 				if (this.current !== index) {
 					this.current = index
 				}
-				if (this.joinListloaded) return
-				this._loadJoinList()
-				this.joinListloaded = true
+				if (this.createListloaded) return
+				this._loadCreate()
+				this.createListloaded = true
 			},
 			toDetail: async function (match){
 				var user = this.$store.state.userinfo

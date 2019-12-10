@@ -18,6 +18,7 @@
 						<image :src="player.faceUrl" mode="aspectFit" style="border-radius: 50%;">
 					</view>
 					<view class="player-info">
+						<text class="player-index">{{players.length - index}}</text>
 						<text class="player-name">{{player.name}}</text>
 						<text class="player-number">{{player.playNumber}}号</text>
 					</view>
@@ -89,17 +90,26 @@
 				var {
 					data
 				} = await http.get("/match/team/players/" + this.teamId)
-				data.forEach(a => self.players.push(a))
+				
+				data.forEach(a => self.players.unshift(a))
 				timeId = setInterval(async () => {
 					var {
 						data
 					} = await http.get("/match/team/newplayers/" + self.teamId)
+					
+					
+					// var dd = JSON.parse(JSON.stringify(self.players[self.players.length - 1]))
+					// dd.name += (new Date()).getSeconds()
+					// dd.id += (new Date()).getSeconds()
+					// data = [dd]
+					
+					
 					var news = []
 					data.forEach(a => {
 						var p = self.players.find(obj => obj.id === a.id)
 						if (p) return
 						news.push(a)
-						self.players.push(a)
+						self.players.unshift(a)
 						uni.showToast({
 							title: a.name + '加入', icon: 'none'
 						})
@@ -187,8 +197,21 @@
 				flex-grow: 1;
 				justify-content: space-between;
 				
+				.player-index {
+					border: 1px solid $uni-color-primary;
+					height: 42upx;
+					width: 42upx;
+					font-size: 26upx;
+					text-align: center;
+					line-height: 42upx;
+					border-radius: 50%;
+					// padding: 4upx;
+					color: $uni-color-primary;
+					margin-right: 16upx;
+				}
 				.player-name {
-					width: 300upx;
+					// width: 300upx;
+					flex-grow: 1;
 				}
 				
 				view {
