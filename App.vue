@@ -1,24 +1,16 @@
 <script>
-	import {
-		http
-	} from '@/utils/luch-request/index.js'
+	import config from '@/config'
 	export default {
 		globalData: {
-			
+
 		},
 		onLaunch: function() {
-			// let userinfo = uni.getStorageSync("userinfo");
-			// if (!userinfo) {
-			// 	uni.login({
-			// 		provider: 'weixin',
-			// 		success: function(loginRes) {
-			// 			http.get('/user?code=' + loginRes.code)
-			// 				.then(res => {
-			// 					uni.setStorageSync("userinfo", res.data.result);
-			// 				})
-			// 		}
-			// 	})
-				this.$store.dispatch('login')
+			var version = uni.getStorageSync("version")
+			if (config.version !== version) {		// 如果版本号不一致，则清除本地缓存
+				uni.clearStorageSync()
+				uni.setStorageSync("version", config.version)
+			}
+			this.$store.dispatch('login')
 
 		},
 		onShow: function() {},

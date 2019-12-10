@@ -12,44 +12,75 @@
 		</scroll-view>
 
 		<user-login :show="show" @close="onClose"></user-login>
+		
+		<add-tip tip="「添加到我的小程序」,方便下次访问" v-if="showAddTip" />
+		
 
 	</view>
 </template>
 
 <script>
 	import userLogin from "@/components/basketball/user-login.vue"
+	import addTip from "@/components/struggler-uniapp-add-tip/struggler-uniapp-add-tip"
+	import {
+		mapState
+	} from 'vuex'
 	export default {
 		name: "basketball",
 		components: {
-			userLogin
+			userLogin, addTip
 		},
 		data() {
 			return {
 				show: false,
 				elements: [{
 						title: '约球报名',
-						name: 'start',
+						name: '发起约球，方便统计到场人数',
 						url: '/pages/yueqiu/baoming/baoming',
 						color: 'blue',
 						cuIcon: 'yueqiu'
 					},
 					{
+						title: '我的报名',
+						name: '记录你的每一次',
+						url: '/pages/my/enroll',
+						color: 'light-blue',
+						cuIcon: 'note'
+					},
+					{
 						title: '统计本队',
-						name: 'statistics',
+						name: '统计得分、篮板、效率值等数据',
 						url: '/pages/home/match/createSingle',
 						color: 'cyan',
 						cuIcon: 'tongji'
 					},
 					{
+						title: '统计双方',
+						name: '统计得分、篮板、正负值、效率值等数据',
+						url: '',
+						color: 'light-zi',
+						cuIcon: 'VS'
+					},
+					{
 						title: '我的比赛',
-						name: 'double',
+						name: '查看所有参与的比赛详细信息',
 						url: '/pages/home/match/matchList',
 						color: 'orange',
 						cuIcon: 'duoren'
+					},
+					{
+						title: '我的数据',
+						name: '查看个人详细数据',
+						url: '/pages/my/mydata',
+						color: 'light-red',
+						cuIcon: 'pen'
 					}
 				]
 			}
 		},
+		computed: mapState({
+			showAddTip: 'showAddTip'
+		}),
 		methods: {
 			navigateTo(item) {
 				let user = this.$store.state.userinfo
@@ -57,13 +88,26 @@
 					this.show = true
 					return
 				}
-				if (!item.url) return;
+				if (!item.url) {
+					uni.showToast({
+						icon: 'none',
+						title: '功能正在设计，敬请期待'
+					})
+					return
+				}
+
 				uni.navigateTo({
 					url: item.url
 				})
 			},
 			onClose: function() {
 				this.show = false
+			},
+			onShareAppMessage: function() {
+				return {
+					title: '篮球爱好者必备工具',
+					path: '/pages/tabBar/home'
+				}
 			}
 		}
 	}
@@ -123,10 +167,10 @@
 	}
 
 	.nav-name {
-		font-size: 28upx;
-		text-transform: Capitalize;
-		margin-top: 20upx;
+		font-size: 24upx;
+		margin-top: 10upx;
 		position: relative;
+		line-height: 1.3;
 	}
 
 	.nav-name::before {
@@ -153,12 +197,12 @@
 		opacity: 0.3;
 	}
 
-	.nav-name::first-letter {
+	/* 	.nav-name::first-letter {
 		font-weight: bold;
 		font-size: 36upx;
 		margin-right: 1px;
 	}
-
+ */
 	.nav-li text {
 		position: absolute;
 		right: 30upx;
@@ -172,5 +216,20 @@
 
 	.text-light {
 		font-weight: 300;
+	}
+
+	.bg-light-blue {
+		color: #fff;
+		background: #82dbff;
+	}
+
+	.bg-light-zi {
+		color: #fff;
+		background-color: #a7a0fe;
+	}
+
+	.bg-light-red {
+		color: #fff;
+		background-color: #fd7e80;
 	}
 </style>

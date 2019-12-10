@@ -119,6 +119,13 @@
 				"navigationBarTitleText": "意见反馈",
 				"backgroundColorTop": "#007aff"
 			}
+		},
+		{
+			"path": "pages/my/mydata",
+			"style": {
+				"navigationBarTitleText": "我的数据",
+				"backgroundColorTop": "#007aff"
+			}
 		}
 	],
 	"globalStyle": {

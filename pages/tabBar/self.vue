@@ -19,15 +19,24 @@
 							<view class="icon"><img src="../../static/message.png"></view>
 							<view class="text">报名活动</view>
 						</navigator>
-						<view class="item">
+						<navigator class="item" url="/pages/home/match/matchList">
 							<view class="icon"><img src="../../static/favorite.png"></view>
 							<view class="text">比赛统计</view>
-						</view>
+						</navigator>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="list-content" style="margin-top: 50px;">
+			<view class="list">
+				<view class="li noborder">
+					<view class="icon">
+						<image src="../../static/share.png"></image>
+					</view>
+					<button size="mini" style="border: none; flex-grow: 1; text-align: left; color: rgba(53, 53, 53, 0.6); margin-left: -20upx" :plain="true" open-type="share">推荐给好友</button>
+					<text class="jdcat jdcat-right"></text>
+				</view>
+			</view>
 			<view class="list" @tap="toEditSelf">
 				<view class="li noborder">
 					<view class="icon">

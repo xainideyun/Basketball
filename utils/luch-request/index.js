@@ -1,5 +1,5 @@
 import Request from './request'
-import { apiUrl } from '../../config'
+import appConfig from '../../config'
 
 const test = new Request()
 
@@ -35,7 +35,7 @@ const http = new Request()
 
 http.setConfig((config) => { /* 设置全局配置 */
   // config.baseUrl = 'https://t.b.api.jiandanmao.cn/api' /* 根域名不同 */
-  config.baseUrl = apiUrl
+  config.baseUrl = appConfig.apiUrl
   config.header = {
 		
   }

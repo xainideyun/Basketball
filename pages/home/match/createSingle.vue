@@ -78,13 +78,13 @@
 						var match = {
 							...self.match,
 							userInfoId: user.id,
-							visitorName: '客队',
+							visitorName: '系统队',
 							teams: [{
 									name: self.match.hostName,
 									userInfoId: user.id
 								},
 								{
-									name: '客队',
+									name: '系统队',
 									userInfoId: user.id
 								},
 							],

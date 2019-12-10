@@ -140,7 +140,7 @@
 			}
 			scroll-view {
 				flex-grow: 1;
-				height: 100upx;
+				height: 500upx;
 			}
 			.list {
 				display: flex;

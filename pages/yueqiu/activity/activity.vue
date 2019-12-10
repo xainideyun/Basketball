@@ -35,7 +35,7 @@
 					<image :src='item.faceUrl' mode="aspectFit" style="border-radius: 50%;">
 				</view>
 				<view class="player-info">
-					<text class="player-name">{{item.name + '  （' + item.playNumber + '）'}}</text>
+					<text class="player-name">{{item.name}}</text>
 					<text class="play-time">{{item.joinTime}}</text>
 				</view>
 				<text :class="item.status == 1 ? 'text-green' : 'text-red'" style="width: 80upx;">{{joinStatus(item.status)}}</text>
@@ -50,8 +50,9 @@
 				<button type="default" class="bg-green" @tap="join">报名</button>
 				<button type="primary" open-type="share">分享</button>
 			</view>
-			<view class="button">
+			<view class="button button-qrcode">
 				<button type="warn" style="width:50%" @tap="onQrcode">活动二维码</button>
+				<text style="color: #ccc; text-align: center;">（扫码报名）</text>
 			</view>
 		</view>
 		<view class="activity-operate" v-if="isCreator">
@@ -61,12 +62,12 @@
 		</view>
 
 
-		<neil-modal :show="showQrcode" @close="onCloseQrcode" title="二维码" confirm-text="关闭" :show-cancel="false">
+		<neil-modal :show="showQrcode" @close="" title="二维码" confirm-text="关闭" :show-cancel="false">
 			<view style="min-height: 90upx;padding: 20upx;text-align: center;">
 				<view style="padding: 10upx;text-align: center;">
 					<image :src="qrcodeUrl" mode="aspectFit" style="width: 100%;"></image>
 				</view>
-				<text style="color:#aaa; margin:10upx 0;">扫码加入</text>
+				<text style="color:#aaa; margin:10upx 0;">扫码报名</text>
 			</view>
 		</neil-modal>
 		<user-login :show="show" @close="onClose"></user-login>
@@ -321,6 +322,12 @@
 				width: 35%;
 			}
 		}
+		
+		.button-qrcode {
+			display: flex;
+			flex-flow: column;
+		}
+		
 	}
 
 	.activity-operate {
@@ -336,5 +343,10 @@
 			width: 90%;
 			margin-top: 40upx;
 		}
+	}
+	
+	.bg-green {
+		// border: 1upx solid #0067D8;
+		background-color: #ff9900 !important;
 	}
 </style>

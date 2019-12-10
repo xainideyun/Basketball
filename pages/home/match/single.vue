@@ -21,7 +21,7 @@
 				<text class="match-operate" :class="[matchStatusComputed]">{{match.status | statusFilter}}</text>
 			</view>
 			<view class="team">
-				<text class="title">{{match.visitorName || '客队'}}</text>
+				<text class="title">{{match.visitorName || '系统队'}}</text>
 				<text class="score">{{match.visitorScore || '0'}}</text>
 				<view class="data">
 					<view class="data-item">
@@ -58,8 +58,8 @@
 					</view>
 				</scroll-view>
 				<view class="team-operate">
-					<text @tap="onJoin()">加入</text>
-					<text @tap="onReplace()">替换</text>
+					<text @tap="onJoin()">增加球员</text>
+					<text @tap="onReplace()">球员轮换</text>
 				</view>
 			</view>
 			<view class="team team-right">
@@ -86,7 +86,7 @@
 			</view>
 		</view>
 		<view class="bottom-operate">
-			<text>查看记录</text>
+			<text @tap="onToDetail()">比赛记录</text>
 			<text @tap="onControl()">比赛操作</text>
 		</view>
 
@@ -94,19 +94,6 @@
 		<neil-modal :show="showWindow" @close="onHideWindow" :title="recordName" :showConfirm="false" :showCancel="false"
 		 :show-cancel="false">
 			<view class="data-list" style="margin-top: 10upx;">
-				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="1" data-property="onePoint">
-					<text>一分命中</text>
-				</view>
-				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="2" data-property="twoPoint">
-					<text>两分命中</text>
-				</view>
-				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="3" data-property="threePoint">
-					<text>三分命中</text>
-				</view>
-			</view>
-			<view class="data-list">
-			</view>
-			<view class="data-list">
 				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="篮板" :data-score="1" data-property="backboard">
 					<text>篮板</text>
 				</view>
@@ -116,34 +103,63 @@
 				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="盖帽" :data-score="1" data-property="blockShot">
 					<text>盖帽</text>
 				</view>
-				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="抢断" :data-score="1" data-property="steals">
-					<text>抢断</text>
+			</view>
+			<view class="data-list">
+				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="1" data-property="onePoint">
+					<text>1分命中</text>
+				</view>
+				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="2" data-property="twoPoint">
+					<text>2分命中</text>
+				</view>
+				<view class="data-item" hover-class="data-item-hover" @tap="onRecord" data-tip="得分" :data-score="3" data-property="threePoint">
+					<text>3分命中</text>
 				</view>
 			</view>
 			<view class="data-list" style="margin-top: 10upx;">
 				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="罚球不中" :data-score="1"
 				 data-property="unOnePoint">
-					<text>一分不中</text>
+					<text>1分不中</text>
 				</view>
 				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="投篮不中" :data-score="1"
 				 data-property="unTwoPoint">
-					<text>两分不中</text>
+					<text>2分不中</text>
 				</view>
 				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="三分不中" :data-score="1"
 				 data-property="unThreePoint">
-					<text>三分不中</text>
+					<text>3分不中</text>
 				</view>
 			</view>
 			<view class="data-list" style="margin-bottom: 10upx;">
-				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="犯规" :data-score="1"
-				 data-property="foul">
-					<text>犯规</text>
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="抢断" :data-score="1"
+				 data-property="steals">
+					<text>抢断</text>
 				</view>
 				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="失误" :data-score="1"
 				 data-property="fault">
 					<text>失误</text>
 				</view>
+				<view class="data-item bg-warning" hover-class="bg-warning-hover" @tap="onRecord" data-tip="犯规" :data-score="1"
+				 data-property="foul">
+					<text>犯规</text>
+				</view>
 			</view>
+		</neil-modal>
+		
+		<neil-modal :show="record.show" @close="onHideRecord()" title="比赛记录" :showConfirm="false" :showCancel="false"
+		 :show-cancel="false">
+			<scroll-view scroll-y="true" style="height: 800upx; overflow: hidden;" @scrolltolower="onLoadRecord()">
+				<view class="log">
+					<view class="item" v-for="(log, index) in record.list" :key="index">
+						<view class="people">
+							<text class="name">{{log.name}}</text>
+							<text class="time">{{log.logTime.slice(11,16)}}</text>
+						</view>
+						<view class="body">
+							<text>{{log.content}}</text>
+						</view>
+					</view>
+				</view>
+			</scroll-view>
 		</neil-modal>
 
 	</view>
@@ -173,6 +189,15 @@
 				section: {}, // 当前进行中的单节
 				teams: [], // 队伍
 				players: [], // 所有球员
+				records: [], // 比赛记录
+				record: { 	// 查看比赛记录
+					list: [],
+					pageSize: 15,
+					show: false,
+					hasData: true,
+					maxScore: 100000000
+				},
+				
 				buttons: [], // 操作菜单
 				showWindow: false, // 是否显示数据记录窗口
 				selectedPlayer: {} // 选中的球员
@@ -267,6 +292,30 @@
 				uni.navigateTo({
 					url: `/pages/home/match/replacePlayer?id=${team.id}&name=${team.name}`
 				})
+			},
+			onToDetail: function() {
+				// uni.navigateTo({
+				// 	url: '/pages/home/match/detail?id=' + this.match.id
+				// })
+				this.record.show = true
+				this.record.maxScore = 100000000
+				this.record.HasData = true
+				this.record.list = []
+				this.onLoadRecord()
+			},
+			onLoadRecord: async function() {
+				if (!this.record.hasData) return
+				var self = this
+				var {data} = await http.get(`/match/record/${this.match.id}?pageIndex=1&maxScore=${this.record.maxScore}&pageSize=${this.record.pageSize}`)
+				if (data.length === 0) {
+					this.HasData = false
+					return
+				}
+				if (data.length < this.record.pageSize) {
+					this.HasData = false
+				}
+				data.forEach(a => self.record.list.push(a))
+				this.record.maxScore = data[data.length - 1].id - 1
 			},
 			onControl() {
 				var team1 = this.teams[0],
@@ -366,9 +415,11 @@
 				uni.showToast({
 					title: '比赛开始'
 				})
+				this._createLog('比赛开始', 15)
 				this._start();
 			},
 			onPause(team) { // 比赛暂停
+				this._createLog('比赛暂停', 17)
 				this._pause(team)
 			},
 			onEndSection: async function() { // 结束本节
@@ -382,6 +433,7 @@
 						this.match.status = 4
 						this.match.isModify = true
 						clearInterval(matchTimeId)
+						this._createLog(`第${this.section.partNumber}节结束`, 18)
 						await this._upload(true)
 					}.bind(this)
 				})
@@ -403,6 +455,7 @@
 				this.match.status = 1
 				this.upPlayers1.forEach(a => a.continueTime = now)
 				this.upPlayers2.forEach(a => a.continueTime = now)
+				this._createLog(`第${this.section.partNumber}节开始`, 15)
 				this._start()
 
 				uni.hideLoading()
@@ -428,6 +481,7 @@
 				this.players
 					.filter(a => a.status === 1)
 					.forEach(a => a.continueTime = now)
+				this._createLog(`比赛继续`, 19)
 				await this._upload()
 				this._start()
 
@@ -449,12 +503,18 @@
 							self.match.isModify = true
 						self.section.status = 2
 						self.section.isModify = true
+						self._createLog(`比赛结束`, 16)
 						await self._upload()
 						uni.$emit("matchStatusChange", self.match)
 						clearTimeout(uploadTimeId)
 						uni.showToast({
 							title: '比赛结束'
 						})
+						setTimeout(() => {
+							uni.switchTab({
+								url: '/pages/tabBar/home'
+							})
+						}, 1000)
 					}
 				})
 			},
@@ -493,7 +553,7 @@
 						if (player.teamId === self.selectedPlayer.teamId) {
 							player.getLost += score
 						} else {
-							player.getLost -= -score
+							player.getLost -= score
 						}
 						player.isModify = true
 					})
@@ -513,11 +573,16 @@
 				team.isModify = true
 				section.isModify = true
 
+				this._recordLog(prop)
+
 				this._upload() // 上传数据
 				this.onHideWindow()
 			},
 			onHideWindow() {
 				this.showWindow = false
+			},
+			onHideRecord() {
+				this.record.show = false
 			},
 			_listen: async function() {
 				var self = this
@@ -604,12 +669,14 @@
 				var section = this.section.isModify ? this.section : null
 				var teams = this.teams.filter(team => team.isModify);
 				var players = this.players.filter(player => player.isModify);
+				var logs = this.records.length === 0 ? null : this.records
 				if (!match && !section && teams.length === 0 && players.length === 0) return
 				var body = {
 					match,
 					section,
 					teams,
-					players
+					players,
+					logs
 				}
 				var {
 					data
@@ -618,7 +685,38 @@
 				if (section) section.isModify = false
 				teams.forEach(team => team.isModify = false)
 				players.forEach(player => player.isModify = false)
+				this.records = []
 				this._startUpload()
+			},
+			_createLog(content, category) {
+				var user = this.$store.state.userinfo
+				this.records.push({
+					name: user.name || user.nickName,
+					logTime: dateUtils.time(),
+					content: content,
+					category: category,
+					matchId: this.match.id,
+					userinfoId: user.id
+				})
+			},
+			_recordLog(prop) {
+				let content, tip = prop.tip,
+					score = prop.score,
+					name = prop.property
+				if (name === 'onePoint') content = '罚球命中'
+				else if (name === 'unOnePoint') content = '罚球不中'
+				else if (name === 'twoPoint') content = '两分命中'
+				else if (name === 'unTwoPoint') content = '两分不中'
+				else if (name === 'threePoint') content = '三分命中'
+				else if (name === 'unThreePoint') content = '三分不中'
+				else if (name === 'foul') content = '失误 +1'
+				else if (name === 'backboard') content = '篮板 +1'
+				else if (name === 'blockShot') content = '盖帽 +1'
+				else if (name === 'assists') content = '助攻 +1'
+				else if (name === 'steals') content = '抢断 +1'
+				else if (name === 'fault') content = '失误 +1'
+
+				this._createLog(`${this.selectedPlayer.name} ${content}`)
 			}
 
 		},
@@ -776,7 +874,7 @@
 					font-size: .9em;
 					align-items: center;
 					border-bottom: 1upx solid #ddd;
-					height: 100upx;
+					height: 150upx;
 
 					.data {
 						font-size: .85em;
@@ -900,14 +998,16 @@
 	.data-list {
 		display: flex;
 		flex-flow: row nowrap;
+		justify-content: center;
 		border-left: 4upx solid transparent;
 		border-right: 4upx solid transparent;
 		margin-right: 10upx;
 		margin-left: 10upx;
 
 		.data-item {
-			width: 147upx;
-			height: 91upx;
+			width: 166upx;
+			height: 120upx;
+			font-size: 1.1em;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -929,7 +1029,57 @@
 			background-color: #902e27;
 		}
 	}
-
+	
+	.log {
+		display: flex;
+		flex-flow: column;
+		align-items: stretch;
+		padding-right: 20upx;
+	
+		.item {
+			display: flex;
+			flex-flow: row nowrap;
+			margin-bottom: 20upx;
+	
+			.people {
+				min-width: 100upx;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: flex;
+				flex-flow: column;
+				text-align: right;
+				margin-right: 30upx;
+	
+				.time {
+					color: #aaa;
+					font-size: .9em;
+					line-height: .9em;
+				}
+			}
+	
+			.body {
+				flex-grow: 1;
+				position: relative;
+				background-color: #c7eaff;
+				padding: 20upx;
+				border-radius: 10upx;
+	
+			}
+	
+			.body::after {
+				content: '';
+				position: absolute;
+				top: 20upx;
+				left: -10upx;
+				width: 20upx;
+				height: 20upx;
+				transform: rotate(45deg);
+				background-color: #c7eaff;
+			}
+		}
+	}
+	
 	.gray {
 		background-color: gray !important;
 	}

@@ -133,6 +133,7 @@
 		image {
 			width: 500upx;
 		}
+		margin-bottom: 30upx;
 	}
 
 	.self {
@@ -144,13 +145,14 @@
 		
 		.join {
 			margin-top: 10upx;
+			font-size: 130%;
 			color: #007AFF;
 		}
 	}
 
 	.scroll {
 		flex-grow: 1;
-		height: 100upx;
+		height: 300upx;
 	}
 
 

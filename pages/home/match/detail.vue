@@ -71,12 +71,20 @@
 										<text>全场</text>
 									</view>
 								</view>
-								<view class="row" v-for="team in match.teams" :key="team.id">
+								<view class="row">
 									<view class="cell" v-for="(section, index) in match.sections" :key="index">
 										<text>{{section.hostScore}}</text>
 									</view>
 									<view class="cell">
 										<text>{{match.hostScore}}</text>
+									</view>
+								</view>
+								<view class="row">
+									<view class="cell" v-for="(section, index) in match.sections" :key="index">
+										<text>{{section.visitorScore}}</text>
+									</view>
+									<view class="cell">
+										<text>{{match.visitorScore}}</text>
 									</view>
 								</view>
 							</view>
@@ -136,6 +144,12 @@
 									<view class="cell">
 										<text>犯规</text>
 									</view>
+									<view class="cell">
+										<text>效率值</text>
+									</view>
+									<view class="cell">
+										<text>正负值</text>
+									</view>
 								</view>
 								<view class="row" v-for="(player, index) in team.players" :key="index">
 									<view class="cell">
@@ -157,19 +171,25 @@
 										<text>{{player.blockShot}}</text>
 									</view>
 									<view class="cell">
-										<text>{{(player.threePoint + player.twoPoint + player.unTwoPoint + player.unThreePoint) + '-' + (player.threePoint + player.twoPoint)}}</text>
+										<text>{{(player.threePoint + player.twoPoint) + '-' + (player.threePoint + player.twoPoint + player.unTwoPoint + player.unThreePoint)}}</text>
 									</view>
 									<view class="cell">
-										<text>{{(player.threePoint + player.unThreePoint) + '-' + player.threePoint}}</text>
+										<text>{{player.threePoint + '-' + (player.threePoint + player.unThreePoint)}}</text>
 									</view>
 									<view class="cell">
-										<text>{{(player.onePoint + player.unOnePoint) + '-' + player.onePoint}}</text>
+										<text>{{player.onePoint + '-' + (player.onePoint + player.unOnePoint)}}</text>
 									</view>
 									<view class="cell">
 										<text>{{player.fault}}</text>
 									</view>
 									<view class="cell">
 										<text>{{player.foul}}</text>
+									</view>
+									<view class="cell">
+										<text>{{player | efficiencyFilter}}</text>
+									</view>
+									<view class="cell">
+										<text>{{player.getLost}}</text>
 									</view>
 								</view>
 							</view>
@@ -208,12 +228,12 @@
 		},
 		data: function() {
 			return {
-				items: ['比赛信息', '比赛统计', '比赛记录'],
+				items: ['比赛信息', '比赛数据', '比赛记录'],
 				current: 0,
 				match: {},
 				logs: [],
 				logPaging: {
-					pageSize: 10,
+					pageSize: 15,
 					maxScore: 100000000
 				},
 				hasLogs: true,
@@ -248,6 +268,7 @@
 				if (status === 1) return '#4cdc4c'
 				else if (status === 2) return 'red'
 				else if (status === 3) return '#ea7042'
+				else if (status === 4) return '#ea7042'
 				return 'black'
 			}
 		},
@@ -279,6 +300,19 @@
 			...myFilter,
 			statusFilter: function(status) {
 				return matchStatus[status || 0]
+			},
+			efficiencyFilter: function(player) {
+				var val = 0
+				val += player.score
+				val += player.backboard
+				val += player.assists
+				val += player.blockShot
+				val += player.steals
+				val -= player.unThreePoint
+				val -= player.unTwoPoint
+				val -= player.unOnePoint
+				val -= player.fault
+				return val;
 			}
 		}
 	}

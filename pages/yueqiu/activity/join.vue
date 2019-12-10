@@ -12,7 +12,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="uni-form-item uni-row">
+<!-- 			<view class="uni-form-item uni-row">
 				<view class="title">
 					<text class="jdcat jdcat-number"></text>
 					<text>号码</text>
@@ -22,7 +22,7 @@
 						<input class="weui-input" v-model="entity.playNumber" type="number" placeholder="输入..." />
 					</view>
 				</view>
-			</view>
+			</view> -->
 			<view class="uni-form-item uni-row">
 				<view class="title">
 					<text class="jdcat jdcat-phone"></text>
