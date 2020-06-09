@@ -305,6 +305,9 @@
 				return 'black'
 			}
 		},
+		onResize(e) {
+			console.log(e);
+		},
 		methods: {
 			onClickItem(index) {
 				if (this.current !== index) {
@@ -362,6 +365,7 @@
 </script>
 
 <style lang="scss">
+	
 	.info {
 		height: 100%;
 		flex-grow: 1;
@@ -395,17 +399,14 @@
 				justify-content: center;
 			}
 		}
-
 		.field-content {
 			padding: 20upx;
-
 			.title {
 				border-left: 10upx solid #007AFF;
 				padding-left: 20upx;
 				font-weight: bold;
 				margin-bottom: 20upx;
 			}
-
 			.field {
 				padding-left: 20upx;
 				text-align: left;
