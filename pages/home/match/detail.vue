@@ -272,6 +272,9 @@
 				return 'black'
 			}
 		},
+		onResize(e) {
+			console.log(e);
+		},
 		methods: {
 			onClickItem(index) {
 				if (this.current !== index) {
@@ -319,7 +322,7 @@
 </script>
 
 <style lang="scss">
-
+	
 	.info {
 		height: 100%;
 		flex-grow: 1;
