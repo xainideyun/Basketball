@@ -31,7 +31,10 @@
 				<text>注：创建比赛后，请先增加球员，然后通过球员轮换，上场首发球员。</text>
 			</view>
 			<view class="uni-btn-v">
-				<button formType="submit" type="primary" :loading="loading" style="margin: 0 50upx; background-color: #007aff;">创建</button>
+				<view class="join">
+					<text @tap="goNote()">查看操作说明</text>
+				</view>
+				<button formType="submit" type="primary" :loading="loading" style="margin: 0 50upx; background-color: #007aff;">下一步</button>
 			</view>
 		</form>
 	</view>
@@ -65,19 +68,24 @@
 					})
 					return
 				}
-				if (!this.match.location) {
-					uni.showToast({
-						icon: 'none',
-						title: '请选择比赛地点'
-					})
-					return
-				}
+				// if (!this.match.location) {
+				// 	uni.showToast({
+				// 		icon: 'none',
+				// 		title: '请选择比赛地点'
+				// 	})
+				// 	return
+				// }
 
 				uni.showModal({
 					title: '提示',
-					content: '确定创建吗?',
+					content: '是否看完操作说明?',
+					confirmText: '朕已看',
+					cancelText: '去看看',
 					success: async function(e) {
-						if (!e.confirm) return
+						if (!e.confirm) {
+							self.goNote()
+							return
+						}
 						var match = {
 							...self.match,
 							userInfoId: user.id,
@@ -104,7 +112,8 @@
 						} = await http.post('/match', match)
 						uni.hideLoading()
 						uni.showToast({
-							title: '创建成功', icon: 'none'
+							title: '创建成功',
+							icon: 'none'
 						})
 						setTimeout(() => {
 							uni.redirectTo({
@@ -112,6 +121,11 @@
 							})
 						}, 1000)
 					}
+				})
+			},
+			goNote() {
+				uni.navigateTo({
+					url: 'matchnote'
 				})
 			},
 			toggleAddress: function() {
@@ -170,8 +184,15 @@
 			}
 		}
 	}
+
 	.tip {
 		padding: 10upx;
 		color: $uni-color-error;
+	}
+
+	.join {
+		margin: 10upx 0 30upx 0;
+		color: #007AFF;
+		text-align: center;
 	}
 </style>

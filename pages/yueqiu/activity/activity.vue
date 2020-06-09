@@ -25,8 +25,8 @@
 			<view class="field-content">
 				共<text class="text-green">{{activity.quantity}}</text>人报名，
 				参加<text class="text-green">{{activity.joinQuantity}}</text>人，
-				待定<text class="text-red">{{activity.absentQuantity}}</text>人，
-				缺席<text class="text-red">{{activity.pendingQuantity}}</text>人
+				待定<text class="text-red">{{activity.pendingQuantity}}</text>人，
+				缺席<text class="text-red">{{activity.absentQuantity}}</text>人
 			</view>
 		</view>
 		<view class="player-container">
@@ -62,7 +62,7 @@
 		</view>
 
 
-		<neil-modal :show="showQrcode" @close="" title="二维码" confirm-text="关闭" :show-cancel="false">
+		<neil-modal :show="showQrcode" @close="onCloseQrcode" title="二维码" confirm-text="关闭" :show-cancel="false">
 			<view style="min-height: 90upx;padding: 20upx;text-align: center;">
 				<view style="padding: 10upx;text-align: center;">
 					<image :src="qrcodeUrl" mode="aspectFit" style="width: 100%;"></image>
@@ -76,6 +76,7 @@
 		 :direction="fab.direction" @onClick="back"></uni-fab> -->
 
 		<view style="height: 200upx;"></view>
+		<ad unit-id="adunit-2412e37f507a6d4a"></ad>
 	</view>
 </template>
 
@@ -167,9 +168,13 @@
 				this.showQrcode = false
 			},
 			toPeople: function(item) {
-				uni.setStorageSync('page-people', item);
+				uni.setStorageSync('page-people', item)
+				let url = 'joinPeople'
+				if (this.$store.state.userinfo.id === item.userInfoId) {
+					url = 'editStatus'
+				}
 				uni.navigateTo({
-					url: 'joinPeople'
+					url
 				})
 			},
 			onEdit: function() {

@@ -13,17 +13,6 @@
 					</view>
 				</view>
 			</view>
-<!-- 			<view class="uni-form-item uni-row">
-				<view class="title">
-					<text class="jdcat jdcat-number"></text>
-					<text>号码</text>
-				</view>
-				<view class="input-content">
-					<view>
-						<input class="weui-input" v-model="entity.playNumber" type="number" placeholder="输入..." />
-					</view>
-				</view>
-			</view> -->
 			<view class="uni-form-item uni-row">
 				<view class="title">
 					<text class="jdcat jdcat-phone"></text>
@@ -67,7 +56,6 @@
 				<button formType="submit" type="primary" :loading="loading" style="margin: 0 50upx; background-color: #007aff;">确定</button>
 			</view>
 		</form>
-		<user-login :show="show" @close="onClose"></user-login>
 	</view>
 </template>
 
@@ -75,30 +63,15 @@
 	import {
 		http
 	} from "@/utils/luch-request/index.js"
-	import userLogin from "@/components/basketball/user-login.vue"
 	export default {
 		data() {
-			let userinfo = this.$store.state.userinfo
-			let name = uni.getStorageSync('historyName') || userinfo.name || userinfo.nickName;
-			let phone = uni.getStorageSync('historyPhone') || userinfo.phone;
-			let number = uni.getStorageSync('historyNumber') || userinfo.playNumber;
 			return {
-				entity: {
-					name: name,
-					playNumber: number,
-					userInfoId: userinfo.id,
-					gender: userinfo.gender,
-					phone: phone,
-					faceUrl: userinfo.faceUrl,
-					activityEnrollId: 0,
-					status: 1,
-					show: false
-				},
+				entity: {},
 				loading: false
 			}
 		},
 		onLoad(e) {
-			this.entity.activityEnrollId = e.id
+			this.entity = uni.getStorageSync('page-people')
 		},
 		methods: {
 			statusChange: function(e) {
@@ -118,7 +91,7 @@
 				let self = this
 				uni.showModal({
 					title: '提示',
-					content: '确定报名吗？',
+					content: '确定修改吗？',
 					success(res) {
 						if (!res.confirm) return
 						self._submit()
@@ -129,16 +102,13 @@
 				let self = this
 				this.loading = true
 				uni.showLoading({
-					title: '正在报名'
+					title: '请稍等...'
 				})
-				http.post('/activity/join', this.entity)
+				http.put('/activity/updateStatus', this.entity)
 					.then(function(res) {
 						uni.hideLoading()
-						uni.setStorageSync('historyName', self.entity.name)
-						uni.setStorageSync('historyNumber', self.entity.playNumber)
-						uni.setStorageSync('historyPhone', self.entity.phone)
 						uni.showToast({
-							title: '报名成功'
+							title: '修改成功'
 						})
 						setTimeout(function() {
 							uni.navigateBack()

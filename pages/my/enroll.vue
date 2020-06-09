@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<ad unit-id="adunit-2412e37f507a6d4a"></ad>
 		<view class="uni-padding-wrap uni-common-mt">
 			<uni-segmented-control :current="current" :values="items" style-type="button" active-color="#007aff" @clickItem="onClickItem" />
 		</view>
@@ -105,7 +106,7 @@
 		},
 		data() {
 			return {
-				current: 0,
+				current: 1,
 				items: ['我发布的', '我参与的'],
 				myList: [],
 				myListPaging: {
@@ -121,12 +122,13 @@
 					pageIndex: 1,
 					maxScore: 100000000
 				},
-				joinListloaded: false
+				myListloaded: false
 			}
 		},
 		onLoad(e) {
 			let self = this
-			this.loadMyActivity()
+			// this.loadMyActivity()
+			this.loadJoinList()
 			// 监听活动删除
 			uni.$on('delete-activity', function(data) {
 				let num = 0;
@@ -150,9 +152,10 @@
 		onUnload() {
 			// 删除监听
 			uni.$off('delete-activity')
+			uni.$off('modify-activity')
 		},
 		onReachBottom: function() {
-			if (this.current === 0) {
+			if (this.current === 1) {
 				if (!this.hasMylist) return
 				this.myListPaging.maxScore = this.myList[this.myList.length - 1].id - 1
 				this.loadMyActivity()
@@ -167,9 +170,9 @@
 				if (this.current !== index) {
 					this.current = index
 				}
-				if (this.joinListloaded) return
-				this.loadJoinList()
-				this.joinListloaded = true
+				if (this.myListloaded) return
+				this.loadMyActivity()
+				this.myListloaded = true
 			},
 			toDetail(item) {
 				uni.navigateTo({
@@ -180,7 +183,8 @@
 				let user = uni.getStorageSync('userinfo');
 				let self = this;
 				http.get(
-						`/activity/create/${user.id}?pageIndex=${this.myListPaging.pageIndex}&maxScore=${this.myListPaging.maxScore}&pageSize=${this.myListPaging.pageSize}`)
+						`/activity/create/${user.id}?pageIndex=${this.myListPaging.pageIndex}&maxScore=${this.myListPaging.maxScore}&pageSize=${this.myListPaging.pageSize}`
+					)
 					.then(function(res) {
 						if (res.data.code > 0) {
 							uni.showToast({
@@ -217,7 +221,8 @@
 				let user = this.$store.state.userinfo
 				let self = this
 				http.get(
-						`/activity/join/${user.id}?pageIndex=${this.joinListPaging.pageIndex}&pageSize=${this.joinListPaging.pageSize}&maxScore=${this.joinListPaging.maxScore}`)
+						`/activity/join/${user.id}?pageIndex=${this.joinListPaging.pageIndex}&pageSize=${this.joinListPaging.pageSize}&maxScore=${this.joinListPaging.maxScore}`
+					)
 					.then(function(res) {
 						if (!res.data.result) {
 							self.hasJoinList = false;
@@ -242,7 +247,7 @@
 						})
 					})
 
-				
+
 			},
 			activityTime: function(time) {
 				if (!time) return '';
@@ -355,6 +360,7 @@
 		font-size: 3.3em;
 		width: auto !important;
 		margin-right: 20upx;
+		color: $uni-color-primary !important;
 	}
 
 	.bg-green,

@@ -35,6 +35,9 @@ const store = new Vuex.Store({
 					success: async function(loginRes) {
 						var { data } = await http.get('/user?code=' + loginRes.code)
 						data.result.isRegisted = !data.result.nickName ? false : true
+						if (!data.result.faceUrl) {
+							data.result.faceUrl = '/static/face.png'
+						}
 						commit('login', data.result)
 						uni.setStorageSync('userinfo', data.result)
 					}

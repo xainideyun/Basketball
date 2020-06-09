@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<ad unit-id="adunit-2412e37f507a6d4a"></ad>
 		<view class="uni-padding-wrap uni-common-mt">
 			<uni-segmented-control :current="current" :values="items" style-type="button" active-color="#007aff" @clickItem="onClickItem" />
 		</view>
@@ -108,8 +109,11 @@
 				if (item) item.status = match.status
 			}.bind(this))
 		},
+		onUnload: function () {
+			uni.$off("matchStatusChange")
+		},
 		onReachBottom: async function() {
-			if (this.current === 0) {
+			if (this.current === 1) {
 				if (!this.hasCreateList) return
 				this.createPaging.maxScore = this.createList[this.createList.length - 1].id - 1
 				await this._loadCreate()

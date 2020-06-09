@@ -1,5 +1,6 @@
 <template>
 	<view class="page">
+		<ad unit-id="adunit-2412e37f507a6d4a"></ad>
 		<view class="uni-padding-wrap">
 			<form @submit="formSubmit">
 				<view class="uni-form-item uni-row">

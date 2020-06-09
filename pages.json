@@ -7,6 +7,13 @@
 			}
 		},
 		{
+			"path": "pages/home/match/detail-landscape",
+			"style": {
+				"navigationBarTitleText": "比赛数据",
+				"pageOrientation": "landscape"
+			}
+		},
+		{
 			"path": "pages/home/match/single",
 			"style": {
 				"navigationBarTitleText": "比赛统计"
@@ -41,7 +48,8 @@
 		{
 			"path": "pages/my/enroll",
 			"style": {
-				"navigationBarTitleText": "报名活动"
+				"navigationBarTitleText": "报名活动",
+				"backgroundColorTop": "#efeff4"
 			}
 		},
 		{
@@ -54,6 +62,12 @@
 			"path": "pages/yueqiu/activity/joinPeople",
 			"style": {
 				"navigationBarTitleText": "参与者"
+			}
+		},
+		{
+			"path": "pages/yueqiu/activity/editStatus",
+			"style": {
+				"navigationBarTitleText": "更新信息"
 			}
 		},
 		{
@@ -123,8 +137,20 @@
 		{
 			"path": "pages/my/mydata",
 			"style": {
+				"navigationBarTitleText": "我的数据"
+			}
+		},
+		{
+			"path": "pages/my/mydata-detail",
+			"style": {
 				"navigationBarTitleText": "我的数据",
-				"backgroundColorTop": "#007aff"
+				"backgroundColorTop": "#fff"
+			}
+		},
+		{
+			"path": "pages/home/match/matchnote",
+			"style": {
+				"navigationBarTitleText": "操作说明"
 			}
 		}
 	],

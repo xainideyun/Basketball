@@ -1,14 +1,12 @@
-
 @font-face {
   font-family: 'jdcat';  /* project id 1425352 */
-  src: url('//at.alicdn.com/t/font_1425352_my8ysdmt62s.eot');
-  src: url('//at.alicdn.com/t/font_1425352_my8ysdmt62s.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_1425352_my8ysdmt62s.woff2') format('woff2'),
-  url('//at.alicdn.com/t/font_1425352_my8ysdmt62s.woff') format('woff'),
-  url('//at.alicdn.com/t/font_1425352_my8ysdmt62s.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_1425352_my8ysdmt62s.svg#jdcat') format('svg');
+  src: url('//at.alicdn.com/t/font_1425352_uidkgimgwxk.eot');
+  src: url('//at.alicdn.com/t/font_1425352_uidkgimgwxk.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1425352_uidkgimgwxk.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1425352_uidkgimgwxk.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1425352_uidkgimgwxk.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1425352_uidkgimgwxk.svg#jdcat') format('svg');
 }
-
 
 .jdcat {
   font-family: "jdcat" !important;
@@ -28,6 +26,10 @@
 
 .jdcat-fenlei:before {
   content: "\e617";
+}
+
+.jdcat-landscape:before {
+  content: "\e6d4";
 }
 
 .jdcat-feedback:before {
@@ -102,6 +104,10 @@
   content: "\e606";
 }
 
+.jdcat-zhiyin:before {
+  content: "\e60b";
+}
+
 .jdcat-bottom:before {
   content: "\e607";
 }
@@ -129,8 +135,6 @@
 .jdcat-back:before {
   content: "\e68e";
 }
-
-
 
 
 

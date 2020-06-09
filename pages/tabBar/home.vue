@@ -9,6 +9,7 @@
 					<text :class="'jdcat jdcat-' + item.cuIcon"></text>
 				</view>
 			</view>
+			<ad unit-id="adunit-9d0b607ab419da4d" ad-type="grid" grid-opacity="0.8" grid-count="5" ad-theme="white"></ad>
 		</scroll-view>
 
 		<user-login :show="show" @close="onClose"></user-login>
@@ -49,7 +50,7 @@
 					},
 					{
 						title: '统计本队',
-						name: '统计得分、篮板、效率值等数据',
+						name: '统计得分、篮板、助攻、效率值等数据',
 						url: '/pages/home/match/createSingle',
 						color: 'cyan',
 						cuIcon: 'tongji'
@@ -58,7 +59,7 @@
 						title: '统计双方',
 						name: '统计得分、篮板、正负值、效率值等数据',
 						url: '',
-						color: 'light-zi',
+						color: 'light-gray',
 						cuIcon: 'VS'
 					},
 					{
@@ -70,10 +71,17 @@
 					},
 					{
 						title: '我的数据',
-						name: '查看个人详细数据',
+						name: '查看个人详细数据，可加标语分享给球友',
 						url: '/pages/my/mydata',
 						color: 'light-red',
 						cuIcon: 'pen'
+					},
+					{
+						title: '操作指引',
+						name: '快速熟悉小程序，掌握统计流程',
+						url: '/pages/home/match/matchnote',
+						color: 'light-zi',
+						cuIcon: 'zhiyin'
 					}
 				]
 			}
@@ -223,14 +231,18 @@
 		background: #82dbff;
 	}
 
-	.bg-light-zi {
+	.bg-light-gray {
 		color: #fff;
-		/* background-color: #a7a0fe; */
 		background-color: #ccc;
 	}
 
 	.bg-light-red {
 		color: #fff;
 		background-color: #fd7e80;
+	}
+
+	.bg-light-zi {
+		color: #fff;
+		background-color: #a7a0fe;
 	}
 </style>

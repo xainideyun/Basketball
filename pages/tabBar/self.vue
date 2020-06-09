@@ -1,5 +1,5 @@
 <template>
-	<view style="overflow-x: hidden;">
+	<view class="container">
 		<view class="header">
 			<view class="bg">
 				<view class="box">
@@ -27,42 +27,56 @@
 				</view>
 			</view>
 		</view>
-		<view class="list-content" style="margin-top: 50px;">
-			<view class="list">
-				<view class="li noborder">
-					<view class="icon">
-						<image src="../../static/share.png"></image>
+		<scroll-view class="menu" :scroll-y="true">
+			<view class="list-content" style="margin-top: 50px;">
+				<view class="list">
+					<view class="li noborder">
+						<view class="icon">
+							<image src="../../static/share.png"></image>
+						</view>
+						<button size="mini" style="border: none; flex-grow: 1; text-align: left; color: rgba(53, 53, 53, 0.6); margin-left: -20upx"
+						 :plain="true" open-type="share">推荐给好友</button>
+						<text class="jdcat jdcat-right"></text>
 					</view>
-					<button size="mini" style="border: none; flex-grow: 1; text-align: left; color: rgba(53, 53, 53, 0.6); margin-left: -20upx" :plain="true" open-type="share">推荐给好友</button>
-					<text class="jdcat jdcat-right"></text>
+				</view>
+				<view class="list" @tap="toEditSelf">
+					<view class="li noborder">
+						<view class="icon">
+							<image src="../../static/card.png"></image>
+						</view>
+						<view class="text">我的名片</view>
+						<text class="jdcat jdcat-right"></text>
+					</view>
+				</view>
+				<view class="list">
+<!-- 					<view class="li">
+						<view class="icon">
+							<image src="../../static/about.png"></image>
+						</view>
+						<view class="text">关于我们</view>
+						<text class="jdcat jdcat-right"></text>
+					</view> -->
+					<view class="li" @tap="onFeedback">
+						<view class="icon">
+							<image src="../../static/feedback.png"></image>
+						</view>
+						<view class="text">意见反馈</view>
+						<text class="jdcat jdcat-right"></text>
+					</view>
+					<view class="li" @tap="onPhone">
+						<view class="icon">
+							<image src="../../static/phone.png"></image>
+						</view>
+						<view class="text">联系我们</view>
+						<text class="jdcat jdcat-right"></text>
+					</view>
+				</view>
+				<view class="banner">
+					<ad unit-id="adunit-2412e37f507a6d4a"></ad>
 				</view>
 			</view>
-			<view class="list" @tap="toEditSelf">
-				<view class="li noborder">
-					<view class="icon">
-						<image src="../../static/card.png"></image>
-					</view>
-					<view class="text">我的名片</view>
-					<text class="jdcat jdcat-right"></text>
-				</view>
-			</view>
-			<view class="list">
-				<view class="li">
-					<view class="icon">
-						<image src="../../static/about.png"></image>
-					</view>
-					<view class="text">关于我们</view>
-					<text class="jdcat jdcat-right"></text>
-				</view>
-				<view class="li" @tap="onFeedback">
-					<view class="icon">
-						<image src="../../static/feedback.png"></image>
-					</view>
-					<view class="text">意见反馈</view>
-					<text class="jdcat jdcat-right"></text>
-				</view>
-			</view>
-		</view>
+		</scroll-view>
+
 	</view>
 </template>
 <script>
@@ -87,7 +101,7 @@
 
 		}),
 		onLoad() {
-			
+
 		},
 		methods: {
 			getUserInfo: async function(e) {
@@ -104,8 +118,10 @@
 						province: detail.province
 					}
 				}
-				var {data} = await http.post('/user', user)
-				
+				var {
+					data
+				} = await http.post('/user', user)
+
 				data.result.isRegisted = true
 				this.$store.commit('setUserInfo', data.result)
 
@@ -113,10 +129,11 @@
 					title: '登录成功'
 				})
 			},
-			toEditSelf: function(){
+			toEditSelf: function() {
 				if (!this.userinfo.isRegisted) {
 					uni.showToast({
-						title: '请先登录系统', icon: 'none'
+						title: '请先登录系统',
+						icon: 'none'
 					});
 					return
 				}
@@ -128,6 +145,11 @@
 				uni.navigateTo({
 					url: '/pages/my/feedback'
 				})
+			},
+			onPhone() {
+				uni.makePhoneCall({
+				    phoneNumber: '18986288527'
+				});
 			}
 		}
 	}
@@ -138,6 +160,13 @@
 		background-color: #f7f7f7;
 		font-size: 30upx;
 		position: fixed;
+	}
+	
+	.container {
+		display: flex;
+		flex-flow: column;
+		justify-content: stretch;
+		height: 100%;
 	}
 
 	.header {
@@ -299,5 +328,13 @@
 			}
 
 		}
+	}
+	
+	.menu {
+		flex-grow: 1;
+	}
+
+	.banner {
+		// position: fixed;
 	}
 </style>

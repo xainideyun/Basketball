@@ -93,6 +93,9 @@
 				</view>
 				<view class="area" v-for="(team, index) in match.teams" :key="index">
 					<view class="caption">
+						<view class="landscape" @tap="onLandscope()">
+							<!-- <text class="jdcat jdcat-landscape"></text> -->
+						</view>
 						<text>{{team.name}}</text>
 					</view>
 					<view class="body">
@@ -211,13 +214,21 @@
 				</view>
 			</view>
 		</view>
+		<view style="height: 200upx;">
+			
+		</view>
+		<view class="ad">
+			<ad unit-id="adunit-2412e37f507a6d4a"></ad>
+		</view>
 	</view>
 
 </template>
 
 <script>
 	import uniSegmentedControl from '@/components/uni-segmented-control/uni-segmented-control.vue'
-	import {matchStatus} from '@/utils/enum.js'
+	import {
+		matchStatus
+	} from '@/utils/enum.js'
 	import myFilter from '@/utils/filters.js'
 	import {
 		http
@@ -243,9 +254,9 @@
 		},
 		onLoad: async function(e) {
 			var id = e.id || 1
-			
+
 			// await http.post("/match/record?hostScore=11&visitorScore=22", {name: '华天晓', logTime: new Date(), content: Date.now() + "詹姆斯连得7分，主宰比赛了。[湖人44:21勇士]", category: 1, matchId: 1, userInfoId: 1})
-			
+
 			uni.showLoading({
 				title: '正在加载...',
 				icon: 'none',
@@ -256,6 +267,28 @@
 			} = await http.get(`/match/detail/${id}`)
 			this.match = data
 			uni.hideLoading()
+			
+			
+			
+			// // 在页面中定义插屏广告
+			// let interstitialAd = null
+			
+			// // 在页面onLoad回调事件中创建插屏广告实例
+			// if (wx.createInterstitialAd) {
+			//   interstitialAd = wx.createInterstitialAd({
+			//     adUnitId: 'adunit-5a409f9e61ae19b4'
+			//   })
+			// }
+			
+			// // 在适合的场景显示插屏广告
+			// if (interstitialAd) {
+			//   interstitialAd.show().catch((err) => {
+			//     console.error('插屏广告错误：' + err)
+			//   })
+			// }
+			
+			
+			
 		},
 		onReachBottom: function() {
 			if (this.current != 2 || !this.hasLogs) return
@@ -281,11 +314,21 @@
 				this._loadLogs()
 				this.loadedLog = true
 			},
-			
-			
+			onLandscope() {
+				uni.setStorageSync('landscapeData', this.match)
+				uni.navigateTo({
+					url: '/pages/home/match/detail-landscape'
+				})
+			},
+
+
 			_loadLogs: async function() {
 				var self = this
-				var {data} = await http.get(`/match/record/${this.match.id}?pageIndex=1&maxScore=${this.logPaging.maxScore}&pageSize=${this.logPaging.pageSize}`)
+				var {
+					data
+				} = await http.get(
+					`/match/record/${this.match.id}?pageIndex=1&maxScore=${this.logPaging.maxScore}&pageSize=${this.logPaging.pageSize}`
+				)
 				if (data.length === 0) {
 					this.hasLogs = false
 					return
@@ -319,7 +362,6 @@
 </script>
 
 <style lang="scss">
-
 	.info {
 		height: 100%;
 		flex-grow: 1;
@@ -353,26 +395,28 @@
 				justify-content: center;
 			}
 		}
-		
+
 		.field-content {
 			padding: 20upx;
-			
+
 			.title {
 				border-left: 10upx solid #007AFF;
 				padding-left: 20upx;
 				font-weight: bold;
 				margin-bottom: 20upx;
 			}
+
 			.field {
 				padding-left: 20upx;
 				text-align: left;
 				border-top: 1upx solid #ddd;
 				padding: 5upx;
-				
+
 				.jdcat {
 					margin-right: 10upx;
 				}
 			}
+
 			.field:last-child {
 				border-bottom: 1upx solid #ddd;
 			}
@@ -398,10 +442,21 @@
 			margin-top: 20upx;
 
 			.caption {
+				position: relative;
 				height: 1.7em;
 				line-height: 1.7em;
 				text-align: center;
 				border: 1upx solid #ccc;
+
+				.landscape {
+					position: absolute;
+					top: 4upx;
+					left: 10upx;
+					color: $uni-color-primary;
+					line-height: 1.2;
+					font-size: 1.2em;
+				}
+	
 			}
 
 			.body {
@@ -432,6 +487,7 @@
 						text-overflow: ellipsis;
 						border-top: 1upx solid #ccc;
 					}
+
 					.cell:first-child {
 						border-top: none;
 					}
@@ -542,5 +598,12 @@
 
 	scroll-view {
 		overflow: hidden;
+	}
+	
+	.ad {
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		left: 0;
 	}
 </style>
