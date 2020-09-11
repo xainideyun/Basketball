@@ -4,7 +4,7 @@
 		globalData: {
 
 		},
-		onLaunch: function() {
+		onLaunch: function() { 
 			var version = uni.getStorageSync("version")
 			if (config.version !== version) {		// 如果版本号不一致，则清除本地缓存
 				uni.clearStorageSync()

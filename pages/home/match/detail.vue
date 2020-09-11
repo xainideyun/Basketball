@@ -94,7 +94,8 @@
 				<view class="area" v-for="(team, index) in match.teams" :key="index">
 					<view class="caption">
 						<view class="landscape" @tap="onLandscope()">
-							<!-- <text class="jdcat jdcat-landscape"></text> -->
+							<text class="jdcat jdcat-landscape"></text>
+							<!--  -->
 						</view>
 						<text>{{team.name}}</text>
 					</view>
